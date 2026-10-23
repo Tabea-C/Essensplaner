@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wochenplaner</title>
+<style>
+:root{--bg:#f4f7f2;--cd:#fff;--tx:#1d2a1f;--mu:#667568;--ac:#2e7d32;--as:#e3f1e4;--bd:#dde3da;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121712;--cd:#1c241d;--tx:#e8efe8;--mu:#9aa89b;--ac:#6fcf76;--as:#25382a;--bd:#2f3a30;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121712;--cd:#1c241d;--tx:#e8efe8;--mu:#9aa89b;--ac:#6fcf76;--as:#25382a;--bd:#2f3a30;color-scheme:dark}
+html,body{background:var(--bg)}
+body{margin:0;padding:12px 12px 84px;font:16px/1.4 Arial,Helvetica,sans-serif;color:var(--tx);max-width:640px;margin:auto}
+h1{font-size:20px;margin:4px 0 10px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
+.chip{flex:none;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:18px;padding:7px 12px;font:inherit;font-size:14px}
+.chip.on{background:var(--ac);color:var(--bg);border-color:var(--ac)}
+.c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
+.c.sel{border-color:var(--ac);background:var(--as)}
+.h{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.m{color:var(--mu);font-size:14px}
+.s{display:flex;align-items:center;gap:10px;flex:none}
+.s button{width:40px;height:40px;border-radius:20px;border:1px solid var(--ac);background:var(--cd);color:var(--ac);font-size:22px}
+.s span{min-width:18px;text-align:center;font-weight:bold}
+summary{color:var(--ac);font-size:14px;margin-top:6px}
+details ul{margin:6px 0 0;padding-left:18px;font-size:14px}
+.del{margin-top:8px;background:none;border:0;color:#c62828;font:inherit;font-size:14px;padding:4px 0}
+.g{font-size:13px;font-weight:bold;color:var(--ac);text-transform:uppercase;margin:16px 0 6px}
+.r{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--bd)}
+.r input{width:22px;height:22px;flex:none}
+.r span{flex:1}.r.x span,.r.x b{text-decoration:line-through;color:var(--mu)}
+label.f{display:block;font-size:14px;color:var(--mu);margin:12px 0 4px}
+input[type=text],input[type=number],select,textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--cd);color:var(--tx);font:inherit}
+textarea{min-height:110px}
+.b{background:var(--ac);color:var(--bg);border:0;border-radius:10px;padding:13px;font:inherit;font-weight:bold;width:100%;margin-top:14px}
+.b.o{background:none;color:var(--ac);border:1px solid var(--ac)}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav button{flex:1;border:0;background:none;color:var(--mu);padding:12px 4px;font:inherit;font-size:14px}
+nav button.on{color:var(--ac);font-weight:bold}
+.ok{color:var(--ac);font-size:14px;margin-top:8px}
+</style></head><body>
+<div id="v"></div>
+<nav><button data-t="0">Auswahl</button><button data-t="1">Einkaufsliste</button><button data-t="2">Neues Gericht</button></nav>
+<script>
+var CAT=["Obst & Gemüse","Tiefkühl","Konserven & Hülsenfrüchte","Getreide & Brot","Tofu, Ei & Kühlregal","Öle, Nüsse & Gewürze","Sonstiges"];
+var TY=["Standard (schnell)","Mittag zum Vorbereiten","Abendessen"];
+var IG={};
+"Zwiebel,Stk,0;Knoblauch,Zehe,0;Karotte,Stk,0;Paprika,Stk,0;Gurke,Stk,0;Tomate,Stk,0;Kirschtomaten,g,0;Zucchini,g,0;Brokkoli,g,0;Lauch,Stk,0;Süßkartoffel,g,0;Kartoffeln,g,0;Champignons,g,0;Zitrone,Stk,0;Limette,Stk,0;Avocado,Stk,0;Rote Bete (vorgekocht),g,0;Spinat (TK),g,1;Wok-Gemüse (TK),g,1;Kichererbsen (Dose),g,2;Kidneybohnen (Dose),g,2;Weiße Bohnen (Dose),g,2;Schwarze Bohnen (Dose),g,2;Tellerlinsen (Dose),g,2;Mais (Dose),g,2;Tomaten gehackt (Dose),g,2;Passierte Tomaten,g,2;Rote Linsen,g,2;Vollkornnudeln,g,3;Vollkornreis,g,3;Quinoa,g,3;Polenta,g,3;Vollkornbrot,g,3;Vollkorn-Wraps,Stk,3;Maistortillas,Stk,3;Tofu natur,g,4;Räuchertofu,g,4;Hummus,g,4;Eier,Stk,4;Olivenöl,EL,5;Rapsöl,EL,5;Walnüsse,g,5;Tahini,EL,5;Sojasauce,EL,5;Senf,TL,5;Apfelessig,EL,5;Gemüsebrühe-Pulver,TL,5;Currypulver,TL,5;Paprikapulver,TL,5;Kreuzkümmel,TL,5;Italienische Kräuter,TL,5;Chiliflocken,TL,5".split(";").forEach(function(s){var p=s.split(",");IG[p[0]]=[p[1],+p[2]]});
+// [Name, Typ, Min, Beschreibung, [[Zutat, Menge/Portion]...]]
+var D=[
+["Tomaten-Linsen-Pasta mit Spinat",0,20,"Linsen in Tomatensauce köcheln, Spinat dazu, mit Nudeln mischen.",[["Vollkornnudeln",90],["Rote Linsen",40],["Passierte Tomaten",200],["Spinat (TK)",100],["Zwiebel",.5],["Knoblauch",1],["Olivenöl",1],["Italienische Kräuter",1]]],
+["Kichererbsen-Spinat-Curry mit Reis",0,25,"Curry anrösten, Tomaten, Kichererbsen und Spinat 10 Min köcheln.",[["Kichererbsen (Dose)",120],["Spinat (TK)",150],["Tomaten gehackt (Dose)",100],["Zwiebel",.5],["Knoblauch",1],["Currypulver",2],["Vollkornreis",70],["Olivenöl",1]]],
+["Tofu-Wok-Gemüse mit Reis",0,20,"Tofu knusprig braten, TK-Gemüse dazu, mit Sojasauce ablöschen.",[["Tofu natur",150],["Wok-Gemüse (TK)",250],["Sojasauce",2],["Knoblauch",1],["Vollkornreis",70],["Rapsöl",1]]],
+["Schnelles Bohnen-Chili",0,25,"Gemüse anbraten, Gewürze, Tomaten, Bohnen, Mais 15 Min köcheln.",[["Kidneybohnen (Dose)",120],["Mais (Dose)",50],["Tomaten gehackt (Dose)",200],["Paprika",1],["Zwiebel",.5],["Knoblauch",1],["Paprikapulver",1],["Kreuzkümmel",.5],["Rapsöl",1]]],
+["Hummus-Gemüse-Wraps",0,10,"Wraps mit Hummus bestreichen, Gemüse einrollen. Ohne Kochen.",[["Vollkorn-Wraps",2],["Hummus",60],["Gurke",.5],["Tomate",1],["Karotte",1]]],
+["Rührei mit Spinat auf Vollkornbrot",0,10,"Spinat anbraten, Eier dazu stocken lassen, aufs Brot geben.",[["Eier",2],["Spinat (TK)",100],["Vollkornbrot",80],["Rapsöl",1]]],
+["Quinoa-Kichererbsen-Salat",1,25,"Quinoa kochen, Gemüse würfeln, mit Zitronen-Dressing mischen.",[["Quinoa",60],["Kichererbsen (Dose)",100],["Gurke",.5],["Paprika",1],["Kirschtomaten",100],["Zitrone",.5],["Olivenöl",1],["Kreuzkümmel",.5]]],
+["Linsen-Rote-Bete-Salat",1,10,"Linsen und Rote Bete mischen, Senf-Essig-Dressing, Walnüsse erst morgens.",[["Tellerlinsen (Dose)",150],["Rote Bete (vorgekocht)",100],["Walnüsse",15],["Zwiebel",.25],["Apfelessig",1],["Senf",1],["Olivenöl",1]]],
+["Weiße-Bohnen-Gemüsesuppe",1,35,"Gemüse 20 Min köcheln, Hälfte pürieren. Lässt sich einfrieren.",[["Weiße Bohnen (Dose)",120],["Karotte",1],["Lauch",.5],["Kartoffeln",150],["Gemüsebrühe-Pulver",1],["Italienische Kräuter",1],["Olivenöl",1]]],
+["Nudelsalat mit Räuchertofu",1,20,"Nudeln abschrecken, Gemüse und Tofu würfeln, Senf-Essig-Dressing.",[["Vollkornnudeln",80],["Räuchertofu",80],["Paprika",.5],["Gurke",.5],["Mais (Dose)",40],["Senf",1],["Apfelessig",1],["Olivenöl",1]]],
+["Süßkartoffel-Kichererbsen-Bowl",1,40,"Süßkartoffel und Kichererbsen backen, Brokkoli dämpfen, Quinoa, Tahini-Dressing.",[["Süßkartoffel",200],["Kichererbsen (Dose)",100],["Brokkoli",150],["Quinoa",60],["Tahini",1],["Zitrone",.5],["Paprikapulver",1],["Olivenöl",1]]],
+["Rote-Linsen-Dal mit Reis",1,30,"Curry anrösten, Linsen, Tomaten, Spinat 15 Min köcheln. Wärmt gut auf.",[["Rote Linsen",70],["Tomaten gehackt (Dose)",100],["Spinat (TK)",100],["Zwiebel",.5],["Knoblauch",1],["Currypulver",2],["Vollkornreis",60],["Olivenöl",1]]],
+["Gemüse-Frittata",1,30,"Gemüse anbraten, Eier darübergießen, im Ofen stocken lassen. Schmeckt auch kalt.",[["Eier",2],["Zucchini",150],["Paprika",.5],["Zwiebel",.5],["Kartoffeln",100],["Rapsöl",1]]],
+["Ofengemüse mit Kartoffeln & Räuchertofu",2,40,"Alles würfeln, mit Öl und Kräutern 30 Min bei 200 °C backen.",[["Kartoffeln",250],["Zucchini",150],["Paprika",1],["Karotte",1],["Räuchertofu",100],["Olivenöl",1],["Italienische Kräuter",1]]],
+["Brokkoli-Nudeln mit Zitrone & Walnuss",2,20,"Nudeln und Brokkoli zusammen kochen, mit Knoblauchöl, Zitrone, Walnüssen mischen.",[["Brokkoli",200],["Vollkornnudeln",90],["Knoblauch",1],["Walnüsse",15],["Zitrone",.5],["Olivenöl",1],["Chiliflocken",.5]]],
+["Schwarze-Bohnen-Tacos",2,20,"Bohnen würzen, Tortillas anbraten, mit Avocado und Gemüse füllen.",[["Maistortillas",3],["Schwarze Bohnen (Dose)",100],["Avocado",.5],["Tomate",1],["Mais (Dose)",30],["Paprika",.5],["Limette",.5],["Kreuzkümmel",.5]]],
+["Rote-Linsen-Möhren-Suppe",2,25,"Möhren anbraten, mit Linsen, Tomaten und Brühe köcheln, pürieren. Dazu Brot.",[["Rote Linsen",60],["Karotte",2],["Zwiebel",.5],["Gemüsebrühe-Pulver",1],["Tomaten gehackt (Dose)",100],["Kreuzkümmel",1],["Vollkornbrot",80],["Rapsöl",1]]],
+["Gefüllte Paprika mit Quinoa & Bohnen",2,40,"Quinoa-Bohnen-Füllung in Paprika, 25 Min bei 200 °C backen.",[["Paprika",2],["Quinoa",50],["Kidneybohnen (Dose)",80],["Tomaten gehackt (Dose)",100],["Zwiebel",.5],["Knoblauch",1],["Paprikapulver",1],["Kreuzkümmel",.5]]],
+["Champignon-Spinat-Pfanne mit Polenta",2,20,"Polenta in Brühe kochen, Champignons scharf anbraten, Spinat dazu.",[["Champignons",200],["Spinat (TK)",100],["Polenta",60],["Knoblauch",1],["Olivenöl",1],["Gemüsebrühe-Pulver",1],["Sojasauce",1]]],
+["Shakshuka mit Vollkornbrot",2,25,"Paprika-Tomaten-Sauce würzen, Eier hineingleiten lassen und stocken lassen.",[["Eier",2],["Tomaten gehackt (Dose)",200],["Paprika",1],["Zwiebel",.5],["Knoblauch",1],["Paprikapulver",1],["Kreuzkümmel",.5],["Olivenöl",1],["Vollkornbrot",80]]],
+["Kartoffel-Gemüse-Pfanne mit Spiegelei",2,25,"Kartoffeln vorgaren und braten, Gemüse dazu, Spiegelei obendrauf.",[["Kartoffeln",250],["Paprika",1],["Zucchini",100],["Eier",2],["Rapsöl",1]]]
+];
+var B=D.map(function(d,k){return{id:"b"+k,n:d[0],t:d[1],m:d[2],d:d[3],i:d[4].map(function(x){return[x[0],x[1],IG[x[0]][0],IG[x[0]][1]]})}});
+var S={sel:{},custom:[],done:{}},tab=0,flt=-1,open={},store=null,msg="";
+var $=function(s){return document.querySelector(s)};
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function all(){return B.concat(S.custom)}
+function save(){var j=JSON.stringify(S);try{localStorage.setItem("wp",j)}catch(e){}
+ if(store)store.set({json:j}).catch(function(){})}
+function num(x){return String(Math.round(x*10)/10).replace(".",",")}
+function A(){
+ var h='<h1>Wochenauswahl</h1><div class="chips">'+["Alle"].concat(TY).map(function(t,k){return'<button class="chip'+(flt==k-1?" on":"")+'" data-a="f" data-i="'+(k-1)+'">'+t+'</button>'}).join("")+'</div>';
+ all().forEach(function(d){if(flt>=0&&d.t!=flt)return;var n=S.sel[d.id]||0;
+  h+='<div class="c'+(n?" sel":"")+'"><div class="h"><div><b>'+esc(d.n)+'</b><div class="m">'+TY[d.t]+" · "+d.m+' Min.</div></div><div class="s"><button data-a="m" data-i="'+d.id+'">−</button><span>'+n+'</span><button data-a="p" data-i="'+d.id+'">+</button></div></div><div class="m" style="margin-top:6px">'+esc(d.d)+'</div><details data-i="'+d.id+'"'+(open[d.id]?" open":"")+'><summary>Zutaten (1 Portion)</summary><ul>'+d.i.map(function(x){return"<li>"+num(x[1])+" "+esc(x[2])+" "+esc(x[0])+"</li>"}).join("")+'</ul></details>'+(d.id[0]=="c"?'<button class="del" data-a="x" data-i="'+d.id+'">Gericht löschen</button>':"")+'</div>'});
+ return h}
+function agg(){var m={};all().forEach(function(d){var n=S.sel[d.id]||0;if(!n)return;d.i.forEach(function(x){var k=x[0]+"|"+x[2];if(!m[k])m[k]={n:x[0],u:x[2],c:x[3],q:0,k:k};m[k].q+=x[1]*n})});
+ return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return a.c-b.c||a.n.localeCompare(b.n,"de")})}
+function L(){var l=agg(),tot=0;for(var k in S.sel)tot+=S.sel[k];
+ if(!l.length)return'<h1>Einkaufsliste</h1><p class="m">Noch nichts gewählt. Wähle im Tab „Auswahl“ deine Gerichte.</p>';
+ var h='<h1>Einkaufsliste</h1><div class="m">'+tot+" Portionen · "+l.length+" Positionen</div>",c=-1;
+ l.forEach(function(x){if(x.c!=c){c=x.c;h+='<div class="g">'+CAT[c]+"</div>"}
+  var q=(x.u=="g"||x.u=="ml")?Math.ceil(x.q/10-1e-9)*10:Math.ceil(x.q-1e-9),d=S.done[x.k];
+  h+='<label class="r'+(d?" x":"")+'"><input type="checkbox" data-a="d" data-i="'+esc(x.k)+'"'+(d?" checked":"")+"><span>"+esc(x.n)+"</span><b>"+q+" "+esc(x.u)+"</b></label>"});
+ return h+'<button class="b o" data-a="rd">Haken zurücksetzen</button><button class="b o" data-a="rs">Auswahl zurücksetzen</button>'}
+function N(){return'<h1>Neues Gericht</h1><label class="f">Name</label><input type="text" id="nn"><label class="f">Art</label><select id="nt">'+TY.map(function(t,k){return'<option value="'+k+'">'+t+"</option>"}).join("")+'</select><label class="f">Zubereitungszeit (Min.)</label><input type="number" id="nm" value="20" min="1"><label class="f">Kurzbeschreibung</label><input type="text" id="nd"><label class="f">Zutaten für 1 Portion, eine pro Zeile: Menge Einheit Zutat (z. B. 200 g Linsen, 2 Stk Zwiebel)</label><textarea id="ni"></textarea><button class="b" data-a="add">Gericht speichern</button><div class="ok">'+msg+"</div>"}
+function R(){$("#v").innerHTML=tab==0?A():tab==1?L():N();document.querySelectorAll("nav button").forEach(function(b){b.className=b.dataset.t==tab?"on":""})}
+document.addEventListener("toggle",function(e){var i=e.target.dataset&&e.target.dataset.i;if(i)open[i]=e.target.open},true);
+document.addEventListener("click",function(e){var b=e.target.closest("button,input");if(!b)return;var a=b.dataset.a,i=b.dataset.i;
+ if(b.dataset.t!=null){tab=+b.dataset.t;msg="";R();window.scrollTo(0,0);return}
+ if(!a)return;
+ if(a=="f"){flt=+i}
+ else if(a=="p"||a=="m"){var n=(S.sel[i]||0)+(a=="p"?1:-1);if(n<0||n>14)return;if(n)S.sel[i]=n;else delete S.sel[i];save()}
+ else if(a=="d"){if(b.checked)S.done[i]=1;else delete S.done[i];save()}
+ else if(a=="rd"){S.done={};save()}
+ else if(a=="rs"){if(!confirm("Gesamte Auswahl zurücksetzen?"))return;S.sel={};S.done={};save()}
+ else if(a=="x"){if(!confirm("Gericht löschen?"))return;S.custom=S.custom.filter(function(d){return d.id!=i});delete S.sel[i];save()}
+ else if(a=="add"){var nm=$("#nn").value.trim(),ing=[],bad=0;
+  $("#ni").value.split("\n").forEach(function(z){z=z.trim();if(!z)return;var p=z.match(/^([\d.,]+)\s*(\S+)\s+(.+)$/);
+   if(!p){bad++;return}var nme=p[3].trim(),k=Object.keys(IG).filter(function(x){return x.toLowerCase()==nme.toLowerCase()})[0];
+   ing.push([k||nme,parseFloat(p[1].replace(",",".")),p[2],k?IG[k][1]:6])});
+  if(!nm||!ing.length||bad){msg="Bitte Name und Zutaten ausfüllen"+(bad?" ("+bad+" Zeile(n) im Format Menge Einheit Zutat prüfen)":"")+".";R();return}
+  S.custom.push({id:"c"+Date.now(),n:nm,t:+$("#nt").value,m:+$("#nm").value||20,d:$("#nd").value.trim(),i:ing});save();tab=0;flt=-1}
+ R()});
+(async function(){
+ try{var j=localStorage.getItem("wp");if(j)S=Object.assign(S,JSON.parse(j))}catch(e){}
+ R();
+ try{if(window.claude&&claude.use){var db=await claude.use("db"),u=await claude.use("user");
+  if(db&&u){store=db.collection("data/users/"+await u.id()).doc("plan");var s=await store.get();
+   if(s.exists&&s.data().json){S=Object.assign({sel:{},custom:[],done:{}},JSON.parse(s.data().json));R()}else save()}}}catch(e){store=null}
+})();
+</script></body></html>
