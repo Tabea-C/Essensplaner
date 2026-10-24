@@ -1,118 +1,1123 @@
 <!DOCTYPE html>
-<html lang="de"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Wochenplaner</title>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meine Rezeptsammlung</title>
 <style>
-:root{--bg:#f4f7f2;--cd:#fff;--tx:#1d2a1f;--mu:#667568;--ac:#2e7d32;--as:#e3f1e4;--bd:#dde3da;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121712;--cd:#1c241d;--tx:#e8efe8;--mu:#9aa89b;--ac:#6fcf76;--as:#25382a;--bd:#2f3a30;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#121712;--cd:#1c241d;--tx:#e8efe8;--mu:#9aa89b;--ac:#6fcf76;--as:#25382a;--bd:#2f3a30;color-scheme:dark}
-html,body{background:var(--bg)}
-body{margin:0;padding:12px 12px 84px;font:16px/1.4 Arial,Helvetica,sans-serif;color:var(--tx);max-width:640px;margin:auto}
-h1{font-size:20px;margin:4px 0 10px}
-.chips{display:flex;gap:6px;overflow-x:auto;margin-bottom:10px}
-.chip{flex:none;border:1px solid var(--bd);background:var(--cd);color:var(--tx);border-radius:18px;padding:7px 12px;font:inherit;font-size:14px}
-.chip.on{background:var(--ac);color:var(--bg);border-color:var(--ac)}
-.c{background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:10px}
-.c.sel{border-color:var(--ac);background:var(--as)}
-.h{display:flex;justify-content:space-between;gap:8px;align-items:center}
-.m{color:var(--mu);font-size:14px}
-.s{display:flex;align-items:center;gap:10px;flex:none}
-.s button{width:40px;height:40px;border-radius:20px;border:1px solid var(--ac);background:var(--cd);color:var(--ac);font-size:22px}
-.s span{min-width:18px;text-align:center;font-weight:bold}
-summary{color:var(--ac);font-size:14px;margin-top:6px}
-details ul{margin:6px 0 0;padding-left:18px;font-size:14px}
-.del{margin-top:8px;background:none;border:0;color:#c62828;font:inherit;font-size:14px;padding:4px 0}
-.g{font-size:13px;font-weight:bold;color:var(--ac);text-transform:uppercase;margin:16px 0 6px}
-.r{display:flex;align-items:center;gap:10px;padding:11px 4px;border-bottom:1px solid var(--bd)}
-.r input{width:22px;height:22px;flex:none}
-.r span{flex:1}.r.x span,.r.x b{text-decoration:line-through;color:var(--mu)}
-label.f{display:block;font-size:14px;color:var(--mu);margin:12px 0 4px}
-input[type=text],input[type=number],select,textarea{width:100%;box-sizing:border-box;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--cd);color:var(--tx);font:inherit}
-textarea{min-height:110px}
-.b{background:var(--ac);color:var(--bg);border:0;border-radius:10px;padding:13px;font:inherit;font-weight:bold;width:100%;margin-top:14px}
-.b.o{background:none;color:var(--ac);border:1px solid var(--ac)}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;background:var(--cd);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
-nav button{flex:1;border:0;background:none;color:var(--mu);padding:12px 4px;font:inherit;font-size:14px}
-nav button.on{color:var(--ac);font-weight:bold}
-.ok{color:var(--ac);font-size:14px;margin-top:8px}
-</style></head><body>
-<div id="v"></div>
-<nav><button data-t="0">Auswahl</button><button data-t="1">Einkaufsliste</button><button data-t="2">Neues Gericht</button></nav>
+  :root {
+    --bg: #faf7f2;
+    --bg-alt: #ffffff;
+    --ink: #2b2b28;
+    --muted: #6b7066;
+    --accent: #2f6f5e;
+    --accent-dark: #204d41;
+    --accent-light: #e4f0ec;
+    --border: #e4ded2;
+    --danger: #b3463b;
+    --radius: 14px;
+    --shadow: 0 2px 10px rgba(43,43,40,0.07);
+  }
+  * { box-sizing: border-box; }
+  body.dark {
+    --bg: #1b1d1c;
+    --bg-alt: #242725;
+    --ink: #eee7da;
+    --muted: #a3aba3;
+    --accent: #6fbfa3;
+    --accent-dark: #91d6bd;
+    --accent-light: #2a3b35;
+    --border: #3a3d3a;
+    --shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    transition: background .25s, color .25s;
+  }
+  header {
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  header .tagline {
+    font-size: .85rem;
+    opacity: .85;
+    font-weight: 400;
+    display: block;
+    margin-top: 2px;
+  }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 20px 80px;
+  }
+  .tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    border-bottom: 2px solid var(--border);
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 18px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    font-weight: 600;
+    transition: color .15s, border-color .15s;
+  }
+  .tab-btn.active {
+    color: var(--accent-dark);
+    border-bottom-color: var(--accent);
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+  .btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 9px 16px;
+    border-radius: 999px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: background .15s, transform .1s;
+  }
+  .btn:hover { background: var(--accent-dark); }
+  .btn:active { transform: scale(.97); }
+  .btn.secondary {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,.7);
+    color: #fff;
+  }
+  .btn.secondary:hover { background: rgba(255,255,255,.15); }
+  .btn.outline {
+    background: transparent;
+    border: 1.5px solid var(--accent);
+    color: var(--accent-dark);
+  }
+  .btn.outline:hover { background: var(--accent-light); }
+  .btn.danger { background: var(--danger); }
+  .btn.danger:hover { background: #8e362c; }
+  .btn.small { padding: 5px 12px; font-size: .8rem; }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .search-box {
+    flex: 1 1 220px;
+    position: relative;
+  }
+  .search-box input {
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: var(--bg-alt);
+    color: var(--ink);
+    font-size: .95rem;
+  }
+  .search-box input:focus { outline: 2px solid var(--accent); }
+
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .chip {
+    border: 1.5px solid var(--border);
+    background: var(--bg-alt);
+    color: var(--muted);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: .85rem;
+    font-weight: 600;
+    transition: all .15s;
+  }
+  .chip:hover { border-color: var(--accent); }
+  .chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 18px;
+  }
+  .recipe-card {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1.5px solid transparent;
+    transition: border-color .15s;
+    position: relative;
+  }
+  .recipe-card.selected { border-color: var(--accent); }
+  .recipe-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .recipe-card h3 {
+    margin: 0;
+    font-size: 1.08rem;
+    line-height: 1.3;
+  }
+  .checkbox-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+  .checkbox-wrap input {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .badge {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: .02em;
+  }
+  .meta-line {
+    font-size: .82rem;
+    color: var(--muted);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .card-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+  .empty-state {
+    text-align: center;
+    color: var(--muted);
+    padding: 60px 20px;
+    font-size: 1rem;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,20,18,.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    max-width: 640px;
+    width: 100%;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 26px 28px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,.25);
+  }
+  .modal h2 { margin-top: 0; }
+  .modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: var(--muted);
+    line-height: 1;
+  }
+  .modal pre.prep {
+    white-space: pre-wrap;
+    font-family: inherit;
+    background: var(--bg);
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .modal ul.ing-list { padding-left: 20px; line-height: 1.7; }
+  .modal a { color: var(--accent-dark); }
+
+  /* Form */
+  .form-card {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px 26px;
+    max-width: 760px;
+  }
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .form-row label {
+    font-weight: 600;
+    font-size: .88rem;
+    color: var(--muted);
+  }
+  .form-row input[type=text],
+  .form-row input[type=number],
+  .form-row input[type=url],
+  .form-row select,
+  .form-row textarea {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: .95rem;
+    font-family: inherit;
+  }
+  .form-row textarea { min-height: 110px; resize: vertical; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .ingredient-row {
+    display: grid;
+    grid-template-columns: 90px 70px 1fr 1fr auto;
+    gap: 8px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .ingredient-row input {
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: .9rem;
+  }
+  .ingredient-row .remove-ing {
+    background: none;
+    border: none;
+    color: var(--danger);
+    font-size: 1.2rem;
+    padding: 4px 8px;
+  }
+  .ing-header {
+    display: grid;
+    grid-template-columns: 90px 70px 1fr 1fr auto;
+    gap: 8px;
+    font-size: .76rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .form-actions { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .hint { font-size: .78rem; color: var(--muted); margin-top: -8px; margin-bottom: 14px; }
+
+  /* Shopping list */
+  .shop-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .shop-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .shop-section {
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+  }
+  .shop-section h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+    color: var(--accent-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 8px;
+  }
+  .shop-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 6px 0;
+    font-size: .92rem;
+  }
+  .shop-item input {
+    margin-top: 3px;
+    width: 17px;
+    height: 17px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .shop-item.checked label {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .shop-item label { cursor: pointer; flex: 1; }
+  .shop-item .qty { font-weight: 700; color: var(--accent-dark); }
+  .shop-item.checked .qty { color: var(--muted); }
+  .shop-item .from-recipes {
+    display: block;
+    font-size: .74rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .selected-bar {
+    position: sticky;
+    bottom: 0;
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.2);
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-dark);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: .9rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,.25);
+    z-index: 200;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .25s;
+  }
+  .toast.show { opacity: 1; }
+
+  @media print {
+    header, .tabs, .toolbar, .chip-row, .selected-bar, .shop-top button, .no-print { display: none !important; }
+    body { background: #fff; color: #000; }
+    .shop-section { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  }
+
+  @media (max-width: 640px) {
+    .two-col { grid-template-columns: 1fr; }
+    .ingredient-row { grid-template-columns: 1fr 1fr; grid-template-areas: "amt unit" "name name" "note note" "remove remove"; }
+    .ing-header { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🍲 Meine Rezeptsammlung
+      <span class="tagline">Rezepte verwalten &amp; automatische Einkaufsliste erstellen</span>
+    </h1>
+  </div>
+  <div class="header-actions">
+    <button class="btn secondary" id="darkToggle" title="Dunkelmodus umschalten">🌓 Dark Mode</button>
+    <button class="btn secondary" id="exportBtn" title="Alle Rezepte als Datei sichern">⬇️ Backup exportieren</button>
+    <label class="btn secondary" style="margin:0;" title="Backup-Datei wieder einlesen">
+      ⬆️ Backup importieren
+      <input type="file" id="importInput" accept="application/json" style="display:none;">
+    </label>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="browse">📖 Rezepte</button>
+    <button class="tab-btn" data-tab="shopping">🛒 Einkaufsliste <span id="shopCountBadge"></span></button>
+    <button class="tab-btn" data-tab="add">➕ Rezept hinzufügen</button>
+  </div>
+
+  <!-- BROWSE TAB -->
+  <div class="tab-panel active" id="tab-browse">
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Rezept oder Zutat suchen…">
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn outline small" id="selectAllBtn">Alle sichtbaren auswählen</button>
+        <button class="btn outline small" id="clearSelectionBtn">Auswahl leeren</button>
+      </div>
+    </div>
+    <div class="chip-row" id="categoryChips"></div>
+    <div class="recipe-grid" id="recipeGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none;">Keine Rezepte gefunden. Passe Suche oder Filter an, oder füge ein neues Rezept hinzu.</div>
+  </div>
+
+  <!-- SHOPPING TAB -->
+  <div class="tab-panel" id="tab-shopping">
+    <div class="shop-top">
+      <div>
+        <strong id="shopRecipeCount">0 Rezepte ausgewählt</strong>
+        <div class="hint" style="margin:4px 0 0;">Zutaten werden automatisch zusammengefasst und nach Supermarktbereich sortiert.</div>
+      </div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn outline small" id="printListBtn">🖨️ Drucken / PDF</button>
+        <button class="btn outline small" id="resetChecksBtn">Haken zurücksetzen</button>
+        <button class="btn danger small" id="clearShopBtn">Auswahl &amp; Liste leeren</button>
+      </div>
+    </div>
+    <div class="shop-sections" id="shopSections"></div>
+    <div class="empty-state" id="shopEmptyState" style="display:none;">Noch keine Rezepte ausgewählt. Gehe zu „Rezepte“ und hake welche an. ✔️</div>
+  </div>
+
+  <!-- ADD TAB -->
+  <div class="tab-panel" id="tab-add">
+    <div class="form-card">
+      <h2 id="formTitle">Neues Rezept hinzufügen</h2>
+      <form id="recipeForm">
+        <input type="hidden" id="editId" value="">
+        <div class="form-row">
+          <label for="f-name">Rezeptname *</label>
+          <input type="text" id="f-name" required placeholder="z. B. Gemüse-Curry">
+        </div>
+        <div class="two-col">
+          <div class="form-row">
+            <label for="f-category">Kategorie *</label>
+            <select id="f-category" required></select>
+          </div>
+          <div class="form-row">
+            <label for="f-portions">Portionen *</label>
+            <input type="number" id="f-portions" min="1" step="1" required placeholder="z. B. 4">
+          </div>
+        </div>
+        <div class="form-row">
+          <label>Zutaten *</label>
+          <div class="ing-header">
+            <span>Menge</span><span>Einheit</span><span>Zutat</span><span>Hinweis</span><span></span>
+          </div>
+          <div id="ingredientRows"></div>
+          <div>
+            <button type="button" class="btn outline small" id="addIngredientBtn">+ Zutat hinzufügen</button>
+          </div>
+        </div>
+        <div class="form-row">
+          <label for="f-prep">Zubereitung *</label>
+          <textarea id="f-prep" required placeholder="Schritt für Schritt…"></textarea>
+        </div>
+        <div class="form-row">
+          <label for="f-source">Quelle / Link (optional)</label>
+          <input type="url" id="f-source" placeholder="https://…">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn">💾 Rezept speichern</button>
+          <button type="button" class="btn outline" id="cancelEditBtn" style="display:none;">Bearbeitung abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- Recipe detail modal -->
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <button class="modal-close" id="closeDetailModal">×</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-var CAT=["Obst & Gemüse","Tiefkühl","Konserven & Hülsenfrüchte","Getreide & Brot","Tofu, Ei & Kühlregal","Öle, Nüsse & Gewürze","Sonstiges"];
-var TY=["Standard (schnell)","Mittag zum Vorbereiten","Abendessen"];
-var IG={};
-"Zwiebel,Stk,0;Knoblauch,Zehe,0;Karotte,Stk,0;Paprika,Stk,0;Gurke,Stk,0;Tomate,Stk,0;Kirschtomaten,g,0;Zucchini,g,0;Brokkoli,g,0;Lauch,Stk,0;Süßkartoffel,g,0;Kartoffeln,g,0;Champignons,g,0;Zitrone,Stk,0;Limette,Stk,0;Avocado,Stk,0;Rote Bete (vorgekocht),g,0;Spinat (TK),g,1;Wok-Gemüse (TK),g,1;Kichererbsen (Dose),g,2;Kidneybohnen (Dose),g,2;Weiße Bohnen (Dose),g,2;Schwarze Bohnen (Dose),g,2;Tellerlinsen (Dose),g,2;Mais (Dose),g,2;Tomaten gehackt (Dose),g,2;Passierte Tomaten,g,2;Rote Linsen,g,2;Vollkornnudeln,g,3;Vollkornreis,g,3;Quinoa,g,3;Polenta,g,3;Vollkornbrot,g,3;Vollkorn-Wraps,Stk,3;Maistortillas,Stk,3;Tofu natur,g,4;Räuchertofu,g,4;Hummus,g,4;Eier,Stk,4;Olivenöl,EL,5;Rapsöl,EL,5;Walnüsse,g,5;Tahini,EL,5;Sojasauce,EL,5;Senf,TL,5;Apfelessig,EL,5;Gemüsebrühe-Pulver,TL,5;Currypulver,TL,5;Paprikapulver,TL,5;Kreuzkümmel,TL,5;Italienische Kräuter,TL,5;Chiliflocken,TL,5".split(";").forEach(function(s){var p=s.split(",");IG[p[0]]=[p[1],+p[2]]});
-// [Name, Typ, Min, Beschreibung, [[Zutat, Menge/Portion]...]]
-var D=[
-["Tomaten-Linsen-Pasta mit Spinat",0,20,"Linsen in Tomatensauce köcheln, Spinat dazu, mit Nudeln mischen.",[["Vollkornnudeln",90],["Rote Linsen",40],["Passierte Tomaten",200],["Spinat (TK)",100],["Zwiebel",.5],["Knoblauch",1],["Olivenöl",1],["Italienische Kräuter",1]]],
-["Kichererbsen-Spinat-Curry mit Reis",0,25,"Curry anrösten, Tomaten, Kichererbsen und Spinat 10 Min köcheln.",[["Kichererbsen (Dose)",120],["Spinat (TK)",150],["Tomaten gehackt (Dose)",100],["Zwiebel",.5],["Knoblauch",1],["Currypulver",2],["Vollkornreis",70],["Olivenöl",1]]],
-["Tofu-Wok-Gemüse mit Reis",0,20,"Tofu knusprig braten, TK-Gemüse dazu, mit Sojasauce ablöschen.",[["Tofu natur",150],["Wok-Gemüse (TK)",250],["Sojasauce",2],["Knoblauch",1],["Vollkornreis",70],["Rapsöl",1]]],
-["Schnelles Bohnen-Chili",0,25,"Gemüse anbraten, Gewürze, Tomaten, Bohnen, Mais 15 Min köcheln.",[["Kidneybohnen (Dose)",120],["Mais (Dose)",50],["Tomaten gehackt (Dose)",200],["Paprika",1],["Zwiebel",.5],["Knoblauch",1],["Paprikapulver",1],["Kreuzkümmel",.5],["Rapsöl",1]]],
-["Hummus-Gemüse-Wraps",0,10,"Wraps mit Hummus bestreichen, Gemüse einrollen. Ohne Kochen.",[["Vollkorn-Wraps",2],["Hummus",60],["Gurke",.5],["Tomate",1],["Karotte",1]]],
-["Rührei mit Spinat auf Vollkornbrot",0,10,"Spinat anbraten, Eier dazu stocken lassen, aufs Brot geben.",[["Eier",2],["Spinat (TK)",100],["Vollkornbrot",80],["Rapsöl",1]]],
-["Quinoa-Kichererbsen-Salat",1,25,"Quinoa kochen, Gemüse würfeln, mit Zitronen-Dressing mischen.",[["Quinoa",60],["Kichererbsen (Dose)",100],["Gurke",.5],["Paprika",1],["Kirschtomaten",100],["Zitrone",.5],["Olivenöl",1],["Kreuzkümmel",.5]]],
-["Linsen-Rote-Bete-Salat",1,10,"Linsen und Rote Bete mischen, Senf-Essig-Dressing, Walnüsse erst morgens.",[["Tellerlinsen (Dose)",150],["Rote Bete (vorgekocht)",100],["Walnüsse",15],["Zwiebel",.25],["Apfelessig",1],["Senf",1],["Olivenöl",1]]],
-["Weiße-Bohnen-Gemüsesuppe",1,35,"Gemüse 20 Min köcheln, Hälfte pürieren. Lässt sich einfrieren.",[["Weiße Bohnen (Dose)",120],["Karotte",1],["Lauch",.5],["Kartoffeln",150],["Gemüsebrühe-Pulver",1],["Italienische Kräuter",1],["Olivenöl",1]]],
-["Nudelsalat mit Räuchertofu",1,20,"Nudeln abschrecken, Gemüse und Tofu würfeln, Senf-Essig-Dressing.",[["Vollkornnudeln",80],["Räuchertofu",80],["Paprika",.5],["Gurke",.5],["Mais (Dose)",40],["Senf",1],["Apfelessig",1],["Olivenöl",1]]],
-["Süßkartoffel-Kichererbsen-Bowl",1,40,"Süßkartoffel und Kichererbsen backen, Brokkoli dämpfen, Quinoa, Tahini-Dressing.",[["Süßkartoffel",200],["Kichererbsen (Dose)",100],["Brokkoli",150],["Quinoa",60],["Tahini",1],["Zitrone",.5],["Paprikapulver",1],["Olivenöl",1]]],
-["Rote-Linsen-Dal mit Reis",1,30,"Curry anrösten, Linsen, Tomaten, Spinat 15 Min köcheln. Wärmt gut auf.",[["Rote Linsen",70],["Tomaten gehackt (Dose)",100],["Spinat (TK)",100],["Zwiebel",.5],["Knoblauch",1],["Currypulver",2],["Vollkornreis",60],["Olivenöl",1]]],
-["Gemüse-Frittata",1,30,"Gemüse anbraten, Eier darübergießen, im Ofen stocken lassen. Schmeckt auch kalt.",[["Eier",2],["Zucchini",150],["Paprika",.5],["Zwiebel",.5],["Kartoffeln",100],["Rapsöl",1]]],
-["Ofengemüse mit Kartoffeln & Räuchertofu",2,40,"Alles würfeln, mit Öl und Kräutern 30 Min bei 200 °C backen.",[["Kartoffeln",250],["Zucchini",150],["Paprika",1],["Karotte",1],["Räuchertofu",100],["Olivenöl",1],["Italienische Kräuter",1]]],
-["Brokkoli-Nudeln mit Zitrone & Walnuss",2,20,"Nudeln und Brokkoli zusammen kochen, mit Knoblauchöl, Zitrone, Walnüssen mischen.",[["Brokkoli",200],["Vollkornnudeln",90],["Knoblauch",1],["Walnüsse",15],["Zitrone",.5],["Olivenöl",1],["Chiliflocken",.5]]],
-["Schwarze-Bohnen-Tacos",2,20,"Bohnen würzen, Tortillas anbraten, mit Avocado und Gemüse füllen.",[["Maistortillas",3],["Schwarze Bohnen (Dose)",100],["Avocado",.5],["Tomate",1],["Mais (Dose)",30],["Paprika",.5],["Limette",.5],["Kreuzkümmel",.5]]],
-["Rote-Linsen-Möhren-Suppe",2,25,"Möhren anbraten, mit Linsen, Tomaten und Brühe köcheln, pürieren. Dazu Brot.",[["Rote Linsen",60],["Karotte",2],["Zwiebel",.5],["Gemüsebrühe-Pulver",1],["Tomaten gehackt (Dose)",100],["Kreuzkümmel",1],["Vollkornbrot",80],["Rapsöl",1]]],
-["Gefüllte Paprika mit Quinoa & Bohnen",2,40,"Quinoa-Bohnen-Füllung in Paprika, 25 Min bei 200 °C backen.",[["Paprika",2],["Quinoa",50],["Kidneybohnen (Dose)",80],["Tomaten gehackt (Dose)",100],["Zwiebel",.5],["Knoblauch",1],["Paprikapulver",1],["Kreuzkümmel",.5]]],
-["Champignon-Spinat-Pfanne mit Polenta",2,20,"Polenta in Brühe kochen, Champignons scharf anbraten, Spinat dazu.",[["Champignons",200],["Spinat (TK)",100],["Polenta",60],["Knoblauch",1],["Olivenöl",1],["Gemüsebrühe-Pulver",1],["Sojasauce",1]]],
-["Shakshuka mit Vollkornbrot",2,25,"Paprika-Tomaten-Sauce würzen, Eier hineingleiten lassen und stocken lassen.",[["Eier",2],["Tomaten gehackt (Dose)",200],["Paprika",1],["Zwiebel",.5],["Knoblauch",1],["Paprikapulver",1],["Kreuzkümmel",.5],["Olivenöl",1],["Vollkornbrot",80]]],
-["Kartoffel-Gemüse-Pfanne mit Spiegelei",2,25,"Kartoffeln vorgaren und braten, Gemüse dazu, Spiegelei obendrauf.",[["Kartoffeln",250],["Paprika",1],["Zucchini",100],["Eier",2],["Rapsöl",1]]]
+/* ============ Seed data (from uploaded Excel) ============ */
+const SEED_CATEGORIES = ["Frühstück", "Vorspeise", "Hauptgericht", "Beilage", "Salat", "Dessert", "Kuchen & Gebäck", "Snack", "Sauce", "Suppe", "Vegetarisch", "Vegan", "Sehr schnell (< 5 min.)", "Schnell (< 10 min.)"];
+const SEED_RECIPES = [{"name": "Gemüse-Tempura mit Dip", "category": "Beilage", "portions": 4, "preparation": "1.\tfür den Teig alle Zutaten miteinander mischen den Teig für 10 Minuten ruhen lassen\n2.\tGemüse in kleine Happen schneiden\n3.\tFür den Dip alle Zutaten miteinander mischen. \n4.\tÖl in einem Topf erhitzen. Dann das Gemüse in dem Teig wälzen und dann im Öl frittieren.\n5.\tAuf Holzspieße Spießen und auf Zewa abtropfen lassen.", "notes": null, "source": null, "ingredients": [{"raw": "800 Gramm Gemüse (Brokkoli Spargel etc)", "amount": 800.0, "unit": "g", "name": "Gemüse", "note": "Brokkoli Spargel etc"}, {"raw": "150 Gramm Mehl", "amount": 150.0, "unit": "g", "name": "Mehl", "note": null}, {"raw": "20 Gramm stärke", "amount": 20.0, "unit": "g", "name": "stärke", "note": null}, {"raw": "200 Milliliter Eiswasser", "amount": 200.0, "unit": "ml", "name": "Eiswasser", "note": null}, {"raw": "1/2 Teelöffel Salz", "amount": 0.5, "unit": "TL", "name": "Salz", "note": null}, {"raw": "500 ml Öl zum Frittieren", "amount": 500.0, "unit": "ml", "name": "Öl zum Frittieren", "note": null}, {"raw": "1 Limette", "amount": 1.0, "unit": "", "name": "Limette", "note": null}, {"raw": "1,5 Esslöffel Zucker", "amount": 1.5, "unit": "EL", "name": "Zucker", "note": null}, {"raw": "5 Esslöffel Sojasoße", "amount": 5.0, "unit": "EL", "name": "Sojasoße", "note": null}, {"raw": "1 Esslöffel Knoblauchpulver", "amount": 1.0, "unit": "EL", "name": "Knoblauchpulver", "note": null}, {"raw": "0,5 Teelöffel Chilipulver", "amount": 0.5, "unit": "TL", "name": "Chilipulver", "note": null}, {"raw": "1 Teelöffel Reisessig", "amount": 1.0, "unit": "TL", "name": "Reisessig", "note": null}], "id": "seed-0"}, {"name": "Spaghetti mit Pinienkern-Sauce", "category": "Hauptgericht", "portions": 2, "preparation": "1. Nudeln bissfest in Salzwasser kochen \n2. Pinienkerne und Knoblauch zerkleinern und hacken. \n3. Zusammen mit dem Olivenöl und der Sahne vermischen und für 5 Minuten auf kleiner Stufe köcheln lassen. Mit Salz würzen.\n3.2 Für etwas mehr Geschmack: Zwiebeln und Cashewkerne zerkleinern und dann in der Pfanne anbraten.\n4. Spaghetti abgießen und mit der Sauce vermischen.", "notes": null, "source": null, "ingredients": [{"raw": "250 Gramm Spaghetti", "amount": 250.0, "unit": "g", "name": "Spaghetti", "note": null}, {"raw": "50 gramm Pinienkerne", "amount": 50.0, "unit": "g", "name": "Pinienkerne", "note": null}, {"raw": "2 Knoblauchzehen", "amount": 2.0, "unit": "", "name": "Knoblauchzehen", "note": null}, {"raw": "5 Esslöffel Olivenöl", "amount": 5.0, "unit": "EL", "name": "Olivenöl", "note": null}, {"raw": "2 Esslöffel Sahne/Schmand", "amount": 2.0, "unit": "EL", "name": "Sahne/Schmand", "note": null}, {"raw": "2 Zwiebeln (Optional)", "amount": 2.0, "unit": "", "name": "Zwiebeln", "note": "Optional"}, {"raw": "20 gramm cashewkerne (Optional)", "amount": 20.0, "unit": "g", "name": "cashewkerne", "note": "Optional"}], "id": "seed-1"}, {"name": "Ceshew-Spinat Gnocchi", "category": "Schnell (< 10 min.)", "portions": 3, "preparation": "1. Gnocchi in heißem Wasser kochen bis sie an der Oberfläche schwimmen \n2. Währenddessen den Spinat entweder in der Mikrowelle oder im Topf oder in der Pfanne auftauen und anbraten.\n3. Zusammen mit Vega Creme und Cashewkernen den Spinat und die Gnocchi (zuvor abgetropft) kurz kochen lassen und nach Belieben würzen.", "notes": null, "source": null, "ingredients": [{"raw": "1 Kilo Gnocchi", "amount": 1.0, "unit": "kg", "name": "Gnocchi", "note": null}, {"raw": "500 Gramm Tiefkühlspinat", "amount": 500.0, "unit": "g", "name": "Tiefkühlspinat", "note": null}, {"raw": "50 Gramm Cashewkerne", "amount": 50.0, "unit": "g", "name": "Cashewkerne", "note": null}, {"raw": "100 Gramm Vegacreme", "amount": 100.0, "unit": "g", "name": "Vegacreme", "note": null}, {"raw": "1 Teelöffel Salt", "amount": 1.0, "unit": "TL", "name": "Salt", "note": null}, {"raw": "1 Teelöffel Curry", "amount": 1.0, "unit": "TL", "name": "Curry", "note": null}], "id": "seed-2"}, {"name": "Couscous a lá Tabea", "category": "Schnell (< 10 min.)", "portions": 1, "preparation": "1. Eine beliebige Menge Couscous mit dem jeweils 1 1/2 fachen Menge Wasser und mit Gemüsebrühe quellen lassen, bis das Wasser aufgesogen ist.\n2. Währenddessen Tomaten  und Frühlingszwiebeln klein schneiden.\n3. Den Zitronensaft mit der Olivenöl, Zucker und dem italienischen Dressing mischen.\n4. Nachdem das Couscous aufgequollen ist, in die Sauce geben und mit den Tomaten und Frühlingszwiebeln vermischen.", "notes": null, "source": null, "ingredients": [{"raw": "100 Gramm Couscous", "amount": 100.0, "unit": "g", "name": "Couscous", "note": null}, {"raw": "50 gramm Tomaten", "amount": 50.0, "unit": "g", "name": "Tomaten", "note": null}, {"raw": "10 gramm Frühlingszwiebeln", "amount": 10.0, "unit": "g", "name": "Frühlingszwiebeln", "note": null}, {"raw": "50 Milliliter Zitronensaft", "amount": 50.0, "unit": "ml", "name": "Zitronensaft", "note": null}, {"raw": "50 Milliliter Olivenöl", "amount": 50.0, "unit": "ml", "name": "Olivenöl", "note": null}, {"raw": "2 Esslöffel Gemüsebrühe", "amount": 2.0, "unit": "EL", "name": "Gemüsebrühe", "note": null}, {"raw": "1 Esslöffel Zucker", "amount": 1.0, "unit": "EL", "name": "Zucker", "note": null}, {"raw": "1 Esslöffel italienisches Dressing", "amount": 1.0, "unit": "EL", "name": "italienisches Dressing", "note": null}], "id": "seed-3"}, {"name": "Weißmehl Baguette", "category": "Kuchen & Gebäck", "portions": 3, "preparation": "1. Lauwarmes Wasser mit Hefe mischen bis diese aufgelöst ist.\n2. Das Mehl hinzugeben und alles auf kleinster Stufe 5 Minuten kneten.\n3. Danach das Salz hinzufügen und weitere 5 Minuten kneten, bis ein glatter weicher Teig entsteht.\n4. Den Teig mit einer Folie abgedeckt in einem warmen Raum für 2 Stunden gehen lassen.\n5. Dann den Teig in einer glatten Wanne weitere 48 Stunden in den Kühlschrank stellen. Dabei alle 12 Stunden falten und dehnen.\n6. Nach dem Kühlschrank den Teigtemperatur annehmen lassen. Das dauert mindestens 2 Stunden.\n7. Dann den Teig in 3 Teile teilen und zu ca 30 cm langen Baguettes formen. Danach eine Stunde ruhen lassen. Dann einschneiden.\n8. Backofen auf 250 Grad vorheizen. Baguettes mit einem halben Glas Wasser für 10 Minuten backen. Dann Dampf entlassen und weitere 10 bis 15 Minuten bei 230 Grad backen. Fertig.", "notes": null, "source": null, "ingredients": [{"raw": "350 - 380 Gramm Wasser", "amount": 350.0, "unit": "g", "name": "Wasser", "note": null}, {"raw": "2 Gramm frische Hefe", "amount": 2.0, "unit": "g", "name": "frische Hefe", "note": null}, {"raw": "600 Gramm Weizenmehl", "amount": 600.0, "unit": "g", "name": "Weizenmehl", "note": null}, {"raw": "17 gramm Salz", "amount": 17.0, "unit": "g", "name": "Salz", "note": null}], "id": "seed-4"}, {"name": "Marinierte Hähnchen", "category": "Hauptgericht", "portions": 2, "preparation": "1. Alles mischen und die Hähnchen damit einlegen. Mindestens eine Stunde einziehen lassen.\n2. Im Backofen 40 Minuten bei 180 Grad Umluft backen. Alternativ 25 Minuten in der Heissluftfriteuse bei 195 Grad backen. ", "notes": null, "source": null, "ingredients": [{"raw": "2 Hähnchenbeine", "amount": 2.0, "unit": "", "name": "Hähnchenbeine", "note": null}, {"raw": "2 Esslöffel Paprikapulver", "amount": 2.0, "unit": "EL", "name": "Paprikapulver", "note": null}, {"raw": "1 Esslöffel knoblauchpulver", "amount": 1.0, "unit": "EL", "name": "knoblauchpulver", "note": null}, {"raw": "1 Prise Chilipulver", "amount": 1.0, "unit": "Prise", "name": "Chilipulver", "note": null}, {"raw": "1 Esslöffel Thymian", "amount": 1.0, "unit": "EL", "name": "Thymian", "note": null}, {"raw": "1 Esslöffel Oregano", "amount": 1.0, "unit": "EL", "name": "Oregano", "note": null}, {"raw": "1 Teelöffel Salz", "amount": 1.0, "unit": "TL", "name": "Salz", "note": null}, {"raw": "2 Esslöffel Olivenöl", "amount": 2.0, "unit": "EL", "name": "Olivenöl", "note": null}], "id": "seed-5"}, {"name": "Gottlos vegane Frühlingsrollen", "category": "Hauptgericht", "portions": 4, "preparation": "1. Für das Dressing: Vegacreme, Reisessig, Olivenöl, Sojasoße und Knoblauchpulver (optional mit etwas Stevia) miteinander vermengen und zur Seite stellen. \n2. Für die Füllung: Räuchertofu klein schneiden und mit etwas Öl in der Pfanne braun anbraten. Danach mit dem Gyrosgewürz würzen.\n3. Während der Tofu in der Pfanne brät, die Hirse nach Packungsanleitung zubereiten. Währenddessen den Brokkoli und Spargel 10 Minuten dämpfen.\n4. Den Tofu zusammen mit der Hirse und den restlichen Zutaten (Eisbergsalat, Pinienkerne, Cherrytomaten und Gurken) in einer Schüssel mit dem Dressing mischen. Fertig.", "notes": null, "source": null, "ingredients": [{"raw": "Reispapier", "amount": null, "unit": "", "name": "Reispapier", "note": null}, {"raw": "100 Gramm Eisbergsalat", "amount": 100.0, "unit": "g", "name": "Eisbergsalat", "note": null}, {"raw": "1 Esslöffel Pinienkerne", "amount": 1.0, "unit": "EL", "name": "Pinienkerne", "note": null}, {"raw": "200 Gramm Räuchertofu", "amount": 200.0, "unit": "g", "name": "Räuchertofu", "note": null}, {"raw": "1 Esslöffel Gyros-Gewürzmischung", "amount": 1.0, "unit": "EL", "name": "Gyros-Gewürzmischung", "note": null}, {"raw": "100 Gramm Cherrytomaten", "amount": 100.0, "unit": "g", "name": "Cherrytomaten", "note": null}, {"raw": "50 gramm Gurken", "amount": 50.0, "unit": "g", "name": "Gurken", "note": null}, {"raw": "120 Gramm Hirse", "amount": 120.0, "unit": "g", "name": "Hirse", "note": null}, {"raw": "240 Gramm Gemüsebrühe", "amount": 240.0, "unit": "g", "name": "Gemüsebrühe", "note": null}, {"raw": "50 gramm Brokkoli", "amount": 50.0, "unit": "g", "name": "Brokkoli", "note": null}, {"raw": "50 Gramm frischer grüner Spargel", "amount": 50.0, "unit": "g", "name": "frischer grüner Spargel", "note": null}, {"raw": "50 Gramm Vegacreme", "amount": 50.0, "unit": "g", "name": "Vegacreme", "note": null}, {"raw": "2 Esslöffel Reisessig", "amount": 2.0, "unit": "EL", "name": "Reisessig", "note": null}, {"raw": "2 Esslöffel Olivenöl", "amount": 2.0, "unit": "EL", "name": "Olivenöl", "note": null}, {"raw": "2 Esslöffel Sojasauce", "amount": 2.0, "unit": "EL", "name": "Sojasauce", "note": null}, {"raw": "1 Esslöffel Knoblauchpulver", "amount": 1.0, "unit": "EL", "name": "Knoblauchpulver", "note": null}], "id": "seed-6"}, {"name": "Der perfekte frittierte Tofu", "category": "Beilage", "portions": 2, "preparation": "1. Den Tofu in die gewünschte beliebige Größe schneiden.\n2. Wasser in einem Topf mit Salz zum Kochen bringen. Danach den Herd ausstellen und den klein geschnittenen Tofu 5 Minuten ziehen lassen.\n3. Danach den Tofu abtropfen lassen. Dann die Speisestärke zusammen mit dem trockenen Tofu in einem verschließbaren Behälter geben. Den Behälter sanft schütteln, damit der Tofu paniert wird.\n4. Das Öl in einer Pfanne erhitzen und den paniertem Tofu, bis er leicht braun wird, anbraten. Danach mit Sojasauce und mit Knoblauchpulver würzen.", "notes": null, "source": null, "ingredients": [{"raw": "Naturtofu", "amount": null, "unit": "", "name": "Naturtofu", "note": null}, {"raw": "1 Prise Salz", "amount": 1.0, "unit": "Prise", "name": "Salz", "note": null}, {"raw": "300 Milliliter Öl", "amount": 300.0, "unit": "ml", "name": "Öl", "note": null}, {"raw": "4 bis 5 Esslöffel Speisestärke", "amount": 4.0, "unit": "", "name": "bis 5 Esslöffel Speisestärke", "note": null}, {"raw": "3 Esslöffel Sojasauce", "amount": 3.0, "unit": "EL", "name": "Sojasauce", "note": null}, {"raw": "2 Esslöffel Knoblauchpulver", "amount": 2.0, "unit": "EL", "name": "Knoblauchpulver", "note": null}], "id": "seed-7"}, {"name": "The OG crispy smashed Potatos", "category": "Beilage", "portions": 2, "preparation": "1. Kartoffeln in Salzwasser für ca 20 bis 30 minuten kochen bis sie etwas weicher sind, damit man sie gut machen kann. Backofen auf 190 Grad vorheizen.\n2. Während die Kartoffeln kochen, kann das Dressing vorbereitet werden. Mayonnaise zusammen mit dem Joghurt, dem Limettensaft, den Knoblauch und den gehackten Essiggurken Schnittlauch und Dill mischen. Im Kühlschrank zwischenlagern.\n3. Die Kartoffeln auf einem mit Backpapier belegten Blech mit einem Glas platt drücken. Das Blech sollte nicht zu überfüllt sein. Nun die Gewürze (Salz, Pfeffer) über die Kartoffeln streuen und großzügig mit Olivenöl beträufeln. \n4. Das Blech für  30 bis 45 Minuten im Backofen backen bis sie knusprig sind. Fertig.", "notes": null, "source": "https://alfiecooks.substack.com/p/the-og-crispy-smashed-potato-salad?utm_source=publication-search", "ingredients": [{"raw": "750 Gramm Babykartoffeln", "amount": 750.0, "unit": "g", "name": "Babykartoffeln", "note": null}, {"raw": "1 Teelöffel Salz", "amount": 1.0, "unit": "TL", "name": "Salz", "note": null}, {"raw": "3 Teelöffel Mayonnaise", "amount": 3.0, "unit": "TL", "name": "Mayonnaise", "note": null}, {"raw": "3 Teelöffel Joghurt", "amount": 3.0, "unit": "TL", "name": "Joghurt", "note": null}, {"raw": "1 Limette", "amount": 1.0, "unit": "", "name": "Limette", "note": null}, {"raw": "2 Esslöffel Knoblauchpulver", "amount": 2.0, "unit": "EL", "name": "Knoblauchpulver", "note": null}, {"raw": "2 Esslöffel  Essig Gurken", "amount": 2.0, "unit": "EL", "name": "Essig Gurken", "note": null}, {"raw": "1 Esslöffel Senf", "amount": 1.0, "unit": "EL", "name": "Senf", "note": null}, {"raw": "1 Esslöffel rote Zwiebeln", "amount": 1.0, "unit": "EL", "name": "rote Zwiebeln", "note": null}, {"raw": "1 Esslöffel Schnittlauch", "amount": 1.0, "unit": "EL", "name": "Schnittlauch", "note": null}, {"raw": "1 Esslöffel Dill", "amount": 1.0, "unit": "EL", "name": "Dill", "note": null}, {"raw": "1 Teelöffel Pfeffer", "amount": 1.0, "unit": "TL", "name": "Pfeffer", "note": null}, {"raw": "2 Teelöffel Olivenöl", "amount": 2.0, "unit": "TL", "name": "Olivenöl", "note": null}], "id": "seed-8"}, {"name": "Tofu-Sauce", "category": "Sauce", "portions": 4, "preparation": "Einfach alle Zutaten im Mixer mixxen. Bei Bedarf würzen.", "notes": null, "source": null, "ingredients": [{"raw": "400 Gramm Seidentofu", "amount": 400.0, "unit": "g", "name": "Seidentofu", "note": null}, {"raw": "1 Esslöffel Reisessig", "amount": 1.0, "unit": "EL", "name": "Reisessig", "note": null}, {"raw": "2 Esslöffel Sojasauce", "amount": 2.0, "unit": "EL", "name": "Sojasauce", "note": null}, {"raw": "2 Esslöffel knoblauchpulver", "amount": 2.0, "unit": "EL", "name": "knoblauchpulver", "note": null}, {"raw": "2 Esslöffel Vegacreme", "amount": 2.0, "unit": "EL", "name": "Vegacreme", "note": null}], "id": "seed-9"}, {"name": "Pico de gallo - Mexikanische Salsa", "category": "Sauce", "portions": 4, "preparation": "1. Tomaten, Limetten und Koriander waschen.\n2. Tomaten fein würfeln, Koriander fein hacken und Zwiebeln fein würfeln.\n3. Alle Zutaten, mit Salz, Knoblauch und den Saft der Limette vermengen.\n4. Optional: eine Avocado fein zermatschen. Lässt sich sehr gut mit Nachos essen.", "notes": null, "source": null, "ingredients": [{"raw": "500 Gramm Tomaten", "amount": 500.0, "unit": "g", "name": "Tomaten", "note": null}, {"raw": "2 Esslöffel Koriander", "amount": 2.0, "unit": "EL", "name": "Koriander", "note": null}, {"raw": "2 Limetten", "amount": 2.0, "unit": "", "name": "Limetten", "note": null}, {"raw": "1 rote Zwiebel", "amount": 1.0, "unit": "", "name": "rote Zwiebel", "note": null}, {"raw": "1 Teelöffel Knoblauchpulver", "amount": 1.0, "unit": "TL", "name": "Knoblauchpulver", "note": null}, {"raw": "1 Prise Meersalz", "amount": 1.0, "unit": "Prise", "name": "Meersalz", "note": null}, {"raw": "1 Avocado (Optional)", "amount": 1.0, "unit": "", "name": "Avocado", "note": "Optional"}], "id": "seed-10"}, {"name": "Frischkäse 3,5 %", "category": "Frühstück", "portions": 10, "preparation": "1. Milch und Joghurt im Glas Behälter mischen. Dann zugedeckt im Rommelsbacher einsetzen. Das Programm \"Frischkäse\" auswählen. Laufzeit: 5 Stunden.\n2. Nach 2 Stunden das Labextrakt mit 50 Milliliter Wasser verdünnen und vorsichtig in die Milch mit dem Joghurt einrühren. Deckel wieder schließen und weiter Reifen lassen.\n3. Nach weiteren 2 Stunden hat sich die Molke getrennt und muss nun in circa ein bis 2 Zentimeter große Stücke geschnitten werden. Deckel wieder schließen und weiter reifen lassen, bis das Programm zu Ende ist.\n4. Nun muss der Frischkäse von der Molke abgetrennt werden, indem man es durch das Abtropfsieb in den zweiten Behälter gießt. Deckel wieder drauf und mindestens 6 bis 8 Stunden abtropfen lassen. Je länger es abtropf desto fester wird der Frischkäse.\n5. Nun kann der fertige Frischkäse nach Belieben gewürzt werden.", "notes": null, "source": null, "ingredients": [{"raw": "1 Liter Vollmilch (3,5 - 3,8 %)", "amount": 1.0, "unit": "l", "name": "Vollmilch", "note": "3,5 - 3,8 %"}, {"raw": "150 Gramm Naturjoghurt", "amount": 150.0, "unit": "g", "name": "Naturjoghurt", "note": null}, {"raw": "5 Tropfen Labextrakt", "amount": 5.0, "unit": "Tropfen", "name": "Labextrakt", "note": null}, {"raw": "50 ml Wasser", "amount": 50.0, "unit": "ml", "name": "Wasser", "note": null}], "id": "seed-11"}, {"name": "Hähnchen süß sauer", "category": "Hauptgericht", "portions": 6, "preparation": "1. Als erstes schneidest du die Hähnchenbrustfilets in circa 2 cm große Stücke und gießt die Ananasstücke über einen Behälter, da du den Saft für später noch benötigst. \n2. Rühre alle Zutaten für die Marinade (Sojasauce, Salz und Pfeffer) bis auf die Speisestärke und das Ei an und gibt die Hähnchenbrust Stücke hinein.\n3. Verquierle das Ei in einem Schälchen und gib es zu den gewürzten Hähnchenstücken dazu.\n4. Jetzt kommt die Speisestärke zu den marinierten Hähnchenstücken dazu.\n5. Gibt die 4 Esslöffel Rapsöl in eine Pfanne und brate die Hähnchenstücke portionsweise 5 Minuten bei mittlerer bis höherer Hitze an. Wichtig dabei ist, dass das Öl min. 0,3 bis 0,5 cm des Pfannenboden bedecken, sonst kleben die Hähnchenstücke am Boden an. Die Hähnchenstücke sind fertig.\n6. Für die Sauce: Schneider die Paprika in kleine Würfel und die Frühlingszwiebeln samt Grün in feine Ringe. \n7. Gibt wieder etwas Pflanzenöl in der Pfanne und dünste Paprika und Frühlingszwiebeln darin ca 5 Minuten bei mittlerer Hitze. \n8. Währenddessen verrührst du für die Süß-Sauer-Sauce alle Zutaten (Saft der Limette, Salz, brauner Zucker, Tomatenmark, Tomatenketchup, Sojasauce und Ananassaft) miteinander. Die 1 Esslöffel Speisestärke wird zum Schluss in die Sauce gerührt, damit es keine Klümpchen gibt. \n9. Wenn das Gemüse gedünstet ist, gibst du die Sauce darüber und lässt sie kurz einköcheln (dick werden). Gib dann esslöffelweise Wasser dazu bis die Konsistenz stimmt.\n10. Optional: Koriander und Reis als Beilage.", "notes": null, "source": null, "ingredients": [{"raw": "800 Gramm Hähnchenbrustfilet", "amount": 800.0, "unit": "g", "name": "Hähnchenbrustfilet", "note": null}, {"raw": "1 Dose Ananasstücke", "amount": 1.0, "unit": "Dose", "name": "Ananasstücke", "note": null}, {"raw": "3 Frühlingszwiebeln", "amount": 3.0, "unit": "", "name": "Frühlingszwiebeln", "note": null}, {"raw": "1 rote Paprika", "amount": 1.0, "unit": "", "name": "rote Paprika", "note": null}, {"raw": "6 Esslöffel Rapsöl", "amount": 6.0, "unit": "EL", "name": "Rapsöl", "note": null}, {"raw": "3 Esslöffel Sojasauce", "amount": 3.0, "unit": "EL", "name": "Sojasauce", "note": null}, {"raw": "1,5 Teelöffel Salz", "amount": 1.5, "unit": "TL", "name": "Salz", "note": null}, {"raw": "2 Eier", "amount": 2.0, "unit": "", "name": "Eier", "note": null}, {"raw": "Eine Priese Pfeffer", "amount": null, "unit": "", "name": "Eine Priese Pfeffer", "note": null}, {"raw": "8 Esslöffel Speisestärke", "amount": 8.0, "unit": "EL", "name": "Speisestärke", "note": null}, {"raw": "1 Limette", "amount": 1.0, "unit": "", "name": "Limette", "note": null}, {"raw": "1,5 Teelöffel Salz", "amount": 1.5, "unit": "TL", "name": "Salz", "note": null}, {"raw": "4,5 Esslöffel Brauner Zucker", "amount": 4.5, "unit": "EL", "name": "Brauner Zucker", "note": null}, {"raw": "1,5 Esslöffel Tomatenmark", "amount": 1.5, "unit": "EL", "name": "Tomatenmark", "note": null}, {"raw": "1,5 Esslöffel Tomatenketchup", "amount": 1.5, "unit": "EL", "name": "Tomatenketchup", "note": null}, {"raw": "1,5 Esslöffel Sojasauce", "amount": 1.5, "unit": "EL", "name": "Sojasauce", "note": null}, {"raw": "1,5 Esslöffel Wasser", "amount": 1.5, "unit": "EL", "name": "Wasser", "note": null}, {"raw": "200 Milliliter Ananassaft aus der Dose", "amount": 200.0, "unit": "ml", "name": "Ananassaft aus der Dose", "note": null}, {"raw": "1,5 Esslöffel Speisestärke", "amount": 1.5, "unit": "EL", "name": "Speisestärke", "note": null}], "id": "seed-12"}, {"name": "Ghibli - Pods überbackenes Brot", "category": "Hauptgericht", "portions": 2, "preparation": "1. Backofen auf 190 Grad Ober unterhitze vorheizen. \n2. Bärlauchbutter zubereiten: Dafür den Bärlauch waschen, schütteln, fein hacken und in eine Schale geben. Die weiche Butter hinzufügen und vermischen. Zur Seite stellen.\n3. Die Pilze vorsichtig mit feuchtem Küchenpapier reinigen, dann die Pilze klein schneiden. Die Petersilie waschen, trockenschütteln und hacken.\n4. Den Weichkäse / Ofenkäse in einer Schale aus Alufolie auf ein Backblech stellen und 20 Minuten backen. \n5. Währenddessen etwas Öl in eine Pfanne geben und auf hoher Temperatur erhitzen. Dann die Champignons und Austernpilze darin 4 bis 5 Minuten anbraten. Anschließend die Pfifferlinge und die Petersilie hinzufügen und weitere 1,5 Minuten weiter braten. Danach die Pilze auf Küchenpapier lagern, damit das Öl etwas entweichenkann. Danach mit Salz und Pfeffer würzen und zur Seite stellen. \n6. Bevor der Käse aus dem Ofen kommt, die Brotscheiben mit  der Bärlauchbutter bestreichen und 2 Minuten in den Ofen dazu legen. \n7. Dann auf jede Brotscheibe einen großen Esslöffel Pilzmasse und darüber geschmolzenen Käse geben. Fertig.", "notes": null, "source": null, "ingredients": [{"raw": "6 Bärlauchblätter", "amount": 6.0, "unit": "", "name": "Bärlauchblätter", "note": null}, {"raw": "100 Gramm Butter", "amount": 100.0, "unit": "g", "name": "Butter", "note": null}, {"raw": "100 Gramm Pfifferlinge", "amount": 100.0, "unit": "g", "name": "Pfifferlinge", "note": null}, {"raw": "100 Gramm Austernpilze", "amount": 100.0, "unit": "g", "name": "Austernpilze", "note": null}, {"raw": "100 Gramm Champions", "amount": 100.0, "unit": "g", "name": "Champions", "note": null}, {"raw": "Bund glatt Petersilie", "amount": null, "unit": "", "name": "Bund glatt Petersilie", "note": null}, {"raw": "Eine Packung Weichkäse / Ofenkäse", "amount": null, "unit": "", "name": "Eine Packung Weichkäse / Ofenkäse", "note": null}, {"raw": "2 Esslöffel Erdnußöl", "amount": 2.0, "unit": "EL", "name": "Erdnußöl", "note": null}, {"raw": "1 Priese Salz", "amount": 1.0, "unit": "Prise", "name": "Salz", "note": null}, {"raw": "1 Priese Pfeffer", "amount": 1.0, "unit": "Prise", "name": "Pfeffer", "note": null}, {"raw": "4 Scheiben Toastbrot", "amount": 4.0, "unit": "Scheiben", "name": "Toastbrot", "note": null}], "id": "seed-13"}, {"name": "Roter Reis", "category": "Hauptgericht", "portions": 2, "preparation": "1. Zwiebeln und Knoblauch mit Öl in einer Pfanne anbraten.\n2. Dann den Reis anbraten, bis er glasig wird.\n3. Dann die 2 fache Menge Wasser mit Tomatenmark und körniger Brühe hinzugeben.\n4. Rühren, bis es sich aufgelöst hat und dann aufkochen lassen.\n5. Kochen lassen und die Hitze immer mehr weg nehmen, bis der Reis durch ist (ca. 10 min.).", "notes": null, "source": null, "ingredients": [{"raw": "Zwiebeln", "amount": null, "unit": "", "name": "Zwiebeln", "note": null}, {"raw": "Knoblauchpulver", "amount": null, "unit": "", "name": "Knoblauchpulver", "note": null}, {"raw": "Rapsöl", "amount": null, "unit": "", "name": "Rapsöl", "note": null}, {"raw": "Reis", "amount": null, "unit": "", "name": "Reis", "note": null}, {"raw": "Tomatenmark", "amount": null, "unit": "", "name": "Tomatenmark", "note": null}, {"raw": "Körnige Gemüsebrühe", "amount": null, "unit": "", "name": "Körnige Gemüsebrühe", "note": null}], "id": "seed-14"}];
+
+/* ============ Supermarket department mapping ============ */
+const DEPARTMENTS = [
+  { key: 'obst_gemuese', label: '🥦 Obst &amp; Gemüse', keywords: ['tomate','zwiebel','knoblauch','gemüse','brokkoli','spargel','limette','zitrone','paprika','kartoffel','gurke','salat','eisbergsalat','petersilie','koriander','bärlauch','frühlingszwiebel','avocado','champignon','pilz','pfifferling','austernpilz','spinat','hirse','obst','apfel','banane','birne','möhre','karotte','sellerie','lauch','chili frisch','ingwer','kräuter','schnittlauch','dill'] },
+  { key: 'fleisch_fisch', label: '🥩 Fleisch, Fisch &amp; Wurst', keywords: ['hähnchen','huhn','rind','schwein','hack','wurst','speck','fisch','lachs','garnelen','pute','ei','eier'] },
+  { key: 'milch_kaese', label: '🧀 Milchprodukte &amp; Käse', keywords: ['milch','joghurt','käse','butter','sahne','schmand','quark','frischkäse','mozzarella','parmesan','vegacreme','creme fraiche','mascarpone'] },
+  { key: 'tiefkuehl', label: '🧊 Tiefkühl', keywords: ['tiefkühl','tk ','frozen'] },
+  { key: 'brot_backwaren', label: '🍞 Brot &amp; Backwaren', keywords: ['brot','toastbrot','baguette','brötchen','mehl','hefe','backpulver','reispapier'] },
+  { key: 'trockenwaren', label: '🥫 Trockenwaren, Reis &amp; Pasta', keywords: ['reis','nudel','spaghetti','pasta','couscous','gnocchi','linsen','bohnen','kichererbsen','hirse','haferflocken','müsli','zucker','salz','speisestärke','stärke','backpulver','labextrakt'] },
+  { key: 'oel_gewuerze', label: '🧂 Öl, Essig &amp; Gewürze', keywords: ['öl','olivenöl','rapsöl','erdnußöl','erdnussöl','essig','reisessig','pfeffer','paprikapulver','curry','oregano','thymian','chilipulver','gewürz','gyros','salz','knoblauchpulver','senf'] },
+  { key: 'saucen_konserven', label: '🍯 Saucen, Konserven &amp; Fertigprodukte', keywords: ['sojasauce','sojasoße','ketchup','tomatenmark','tomatenketchup','dressing','brühe','gemüsebrühe','ananas','dose','senf','mayonnaise'] },
+  { key: 'nuesse_suess', label: '🌰 Nüsse, Backzutaten &amp; Süßes', keywords: ['pinienkerne','cashew','nuss','mandel','zucker','honig','schokolade','vanille','stevia'] },
+  { key: 'getraenke', label: '🥤 Getränke', keywords: ['wasser','saft','ananassaft','zitronensaft'] },
+  { key: 'tofu_vegan', label: '🌱 Tofu &amp; pflanzliche Proteine', keywords: ['tofu','seidentofu','räuchertofu','veganer','vega '] },
+  { key: 'sonstiges', label: '🧺 Sonstiges', keywords: [] },
 ];
-var B=D.map(function(d,k){return{id:"b"+k,n:d[0],t:d[1],m:d[2],d:d[3],i:d[4].map(function(x){return[x[0],x[1],IG[x[0]][0],IG[x[0]][1]]})}});
-var S={sel:{},custom:[],done:{}},tab=0,flt=-1,open={},store=null,msg="";
-var $=function(s){return document.querySelector(s)};
-function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
-function all(){return B.concat(S.custom)}
-function save(){var j=JSON.stringify(S);try{localStorage.setItem("wp",j)}catch(e){}
- if(store)store.set({json:j}).catch(function(){})}
-function num(x){return String(Math.round(x*10)/10).replace(".",",")}
-function A(){
- var h='<h1>Wochenauswahl</h1><div class="chips">'+["Alle"].concat(TY).map(function(t,k){return'<button class="chip'+(flt==k-1?" on":"")+'" data-a="f" data-i="'+(k-1)+'">'+t+'</button>'}).join("")+'</div>';
- all().forEach(function(d){if(flt>=0&&d.t!=flt)return;var n=S.sel[d.id]||0;
-  h+='<div class="c'+(n?" sel":"")+'"><div class="h"><div><b>'+esc(d.n)+'</b><div class="m">'+TY[d.t]+" · "+d.m+' Min.</div></div><div class="s"><button data-a="m" data-i="'+d.id+'">−</button><span>'+n+'</span><button data-a="p" data-i="'+d.id+'">+</button></div></div><div class="m" style="margin-top:6px">'+esc(d.d)+'</div><details data-i="'+d.id+'"'+(open[d.id]?" open":"")+'><summary>Zutaten (1 Portion)</summary><ul>'+d.i.map(function(x){return"<li>"+num(x[1])+" "+esc(x[2])+" "+esc(x[0])+"</li>"}).join("")+'</ul></details>'+(d.id[0]=="c"?'<button class="del" data-a="x" data-i="'+d.id+'">Gericht löschen</button>':"")+'</div>'});
- return h}
-function agg(){var m={};all().forEach(function(d){var n=S.sel[d.id]||0;if(!n)return;d.i.forEach(function(x){var k=x[0]+"|"+x[2];if(!m[k])m[k]={n:x[0],u:x[2],c:x[3],q:0,k:k};m[k].q+=x[1]*n})});
- return Object.keys(m).map(function(k){return m[k]}).sort(function(a,b){return a.c-b.c||a.n.localeCompare(b.n,"de")})}
-function L(){var l=agg(),tot=0;for(var k in S.sel)tot+=S.sel[k];
- if(!l.length)return'<h1>Einkaufsliste</h1><p class="m">Noch nichts gewählt. Wähle im Tab „Auswahl“ deine Gerichte.</p>';
- var h='<h1>Einkaufsliste</h1><div class="m">'+tot+" Portionen · "+l.length+" Positionen</div>",c=-1;
- l.forEach(function(x){if(x.c!=c){c=x.c;h+='<div class="g">'+CAT[c]+"</div>"}
-  var q=(x.u=="g"||x.u=="ml")?Math.ceil(x.q/10-1e-9)*10:Math.ceil(x.q-1e-9),d=S.done[x.k];
-  h+='<label class="r'+(d?" x":"")+'"><input type="checkbox" data-a="d" data-i="'+esc(x.k)+'"'+(d?" checked":"")+"><span>"+esc(x.n)+"</span><b>"+q+" "+esc(x.u)+"</b></label>"});
- return h+'<button class="b o" data-a="rd">Haken zurücksetzen</button><button class="b o" data-a="rs">Auswahl zurücksetzen</button>'}
-function N(){return'<h1>Neues Gericht</h1><label class="f">Name</label><input type="text" id="nn"><label class="f">Art</label><select id="nt">'+TY.map(function(t,k){return'<option value="'+k+'">'+t+"</option>"}).join("")+'</select><label class="f">Zubereitungszeit (Min.)</label><input type="number" id="nm" value="20" min="1"><label class="f">Kurzbeschreibung</label><input type="text" id="nd"><label class="f">Zutaten für 1 Portion, eine pro Zeile: Menge Einheit Zutat (z. B. 200 g Linsen, 2 Stk Zwiebel)</label><textarea id="ni"></textarea><button class="b" data-a="add">Gericht speichern</button><div class="ok">'+msg+"</div>"}
-function R(){$("#v").innerHTML=tab==0?A():tab==1?L():N();document.querySelectorAll("nav button").forEach(function(b){b.className=b.dataset.t==tab?"on":""})}
-document.addEventListener("toggle",function(e){var i=e.target.dataset&&e.target.dataset.i;if(i)open[i]=e.target.open},true);
-document.addEventListener("click",function(e){var b=e.target.closest("button,input");if(!b)return;var a=b.dataset.a,i=b.dataset.i;
- if(b.dataset.t!=null){tab=+b.dataset.t;msg="";R();window.scrollTo(0,0);return}
- if(!a)return;
- if(a=="f"){flt=+i}
- else if(a=="p"||a=="m"){var n=(S.sel[i]||0)+(a=="p"?1:-1);if(n<0||n>14)return;if(n)S.sel[i]=n;else delete S.sel[i];save()}
- else if(a=="d"){if(b.checked)S.done[i]=1;else delete S.done[i];save()}
- else if(a=="rd"){S.done={};save()}
- else if(a=="rs"){if(!confirm("Gesamte Auswahl zurücksetzen?"))return;S.sel={};S.done={};save()}
- else if(a=="x"){if(!confirm("Gericht löschen?"))return;S.custom=S.custom.filter(function(d){return d.id!=i});delete S.sel[i];save()}
- else if(a=="add"){var nm=$("#nn").value.trim(),ing=[],bad=0;
-  $("#ni").value.split("\n").forEach(function(z){z=z.trim();if(!z)return;var p=z.match(/^([\d.,]+)\s*(\S+)\s+(.+)$/);
-   if(!p){bad++;return}var nme=p[3].trim(),k=Object.keys(IG).filter(function(x){return x.toLowerCase()==nme.toLowerCase()})[0];
-   ing.push([k||nme,parseFloat(p[1].replace(",",".")),p[2],k?IG[k][1]:6])});
-  if(!nm||!ing.length||bad){msg="Bitte Name und Zutaten ausfüllen"+(bad?" ("+bad+" Zeile(n) im Format Menge Einheit Zutat prüfen)":"")+".";R();return}
-  S.custom.push({id:"c"+Date.now(),n:nm,t:+$("#nt").value,m:+$("#nm").value||20,d:$("#nd").value.trim(),i:ing});save();tab=0;flt=-1}
- R()});
-(async function(){
- try{var j=localStorage.getItem("wp");if(j)S=Object.assign(S,JSON.parse(j))}catch(e){}
- R();
- try{if(window.claude&&claude.use){var db=await claude.use("db"),u=await claude.use("user");
-  if(db&&u){store=db.collection("data/users/"+await u.id()).doc("plan");var s=await store.get();
-   if(s.exists&&s.data().json){S=Object.assign({sel:{},custom:[],done:{}},JSON.parse(s.data().json));R()}else save()}}}catch(e){store=null}
-})();
-</script></body></html>
+
+function guessDepartment(name) {
+  const n = (name || '').toLowerCase();
+  for (const dept of DEPARTMENTS) {
+    if (dept.key === 'sonstiges') continue;
+    for (const kw of dept.keywords) {
+      if (n.includes(kw)) return dept.key;
+    }
+  }
+  return 'sonstiges';
+}
+
+/* ============ State & persistence ============ */
+const LS_RECIPES = 'rezeptsammlung_recipes_v1';
+const LS_SELECTED = 'rezeptsammlung_selected_v1';
+const LS_CHECKED = 'rezeptsammlung_checked_v1';
+const LS_DARK = 'rezeptsammlung_dark_v1';
+const LS_DEPT_OVERRIDES = 'rezeptsammlung_dept_overrides_v1';
+
+function loadRecipes() {
+  const raw = localStorage.getItem(LS_RECIPES);
+  if (raw) {
+    try { return JSON.parse(raw); } catch (e) { /* fall through */ }
+  }
+  return SEED_RECIPES.slice();
+}
+function saveRecipes() { localStorage.setItem(LS_RECIPES, JSON.stringify(state.recipes)); }
+
+function loadSet(key) {
+  const raw = localStorage.getItem(key);
+  if (raw) { try { return new Set(JSON.parse(raw)); } catch (e) {} }
+  return new Set();
+}
+function saveSet(key, set) { localStorage.setItem(key, JSON.stringify([...set])); }
+
+const state = {
+  recipes: loadRecipes(),
+  selected: loadSet(LS_SELECTED),
+  checked: loadSet(LS_CHECKED),
+  activeCategories: new Set(),
+  searchTerm: '',
+  editingId: null,
+};
+
+function allCategories() {
+  const cats = new Set(SEED_CATEGORIES);
+  state.recipes.forEach(r => cats.add(r.category));
+  return [...cats];
+}
+
+function uid() { return 'r-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8); }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast._timer);
+  showToast._timer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ============ Tabs ============ */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'shopping') renderShoppingList();
+  });
+});
+
+/* ============ Dark mode ============ */
+function applyDark(on) {
+  document.body.classList.toggle('dark', on);
+  localStorage.setItem(LS_DARK, on ? '1' : '0');
+}
+applyDark(localStorage.getItem(LS_DARK) === '1');
+document.getElementById('darkToggle').addEventListener('click', () => {
+  applyDark(!document.body.classList.contains('dark'));
+});
+
+/* ============ Category chips & browse rendering ============ */
+function renderCategoryChips() {
+  const wrap = document.getElementById('categoryChips');
+  wrap.innerHTML = '';
+  allCategories().forEach(cat => {
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (state.activeCategories.has(cat) ? ' active' : '');
+    chip.textContent = cat;
+    chip.addEventListener('click', () => {
+      if (state.activeCategories.has(cat)) state.activeCategories.delete(cat);
+      else state.activeCategories.add(cat);
+      renderCategoryChips();
+      renderRecipeGrid();
+    });
+    wrap.appendChild(chip);
+  });
+  if (allCategories().length) {
+    const clearChip = document.createElement('button');
+    clearChip.className = 'chip';
+    clearChip.textContent = '✕ Filter zurücksetzen';
+    clearChip.style.display = state.activeCategories.size ? 'inline-block' : 'none';
+    clearChip.addEventListener('click', () => {
+      state.activeCategories.clear();
+      renderCategoryChips();
+      renderRecipeGrid();
+    });
+    wrap.appendChild(clearChip);
+  }
+}
+
+function matchesFilters(r) {
+  if (state.activeCategories.size && !state.activeCategories.has(r.category)) return false;
+  if (state.searchTerm) {
+    const term = state.searchTerm.toLowerCase();
+    const inName = r.name.toLowerCase().includes(term);
+    const inIng = r.ingredients.some(i => (i.name || '').toLowerCase().includes(term) || (i.raw || '').toLowerCase().includes(term));
+    if (!inName && !inIng) return false;
+  }
+  return true;
+}
+
+function formatQty(amount, unit) {
+  if (amount == null) return '';
+  let a = Math.round(amount * 100) / 100;
+  let s = Number.isInteger(a) ? String(a) : String(a).replace('.', ',');
+  return (s + ' ' + (unit || '')).trim();
+}
+
+function renderRecipeGrid() {
+  const grid = document.getElementById('recipeGrid');
+  grid.innerHTML = '';
+  const visible = state.recipes.filter(matchesFilters);
+  document.getElementById('emptyState').style.display = visible.length ? 'none' : 'block';
+  visible.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'recipe-card' + (state.selected.has(r.id) ? ' selected' : '');
+    const ingPreview = r.ingredients.slice(0, 3).map(i => i.name).join(', ') + (r.ingredients.length > 3 ? '…' : '');
+    card.innerHTML = `
+      <div class="recipe-card-top">
+        <h3>${escapeHtml(r.name)}</h3>
+        <label class="checkbox-wrap" title="Für Einkaufsliste auswählen">
+          <input type="checkbox" data-select="${r.id}" ${state.selected.has(r.id) ? 'checked' : ''}>
+        </label>
+      </div>
+      <div class="badge-row"><span class="badge">${escapeHtml(r.category)}</span></div>
+      <div class="meta-line">
+        <span>🍽️ ${r.portions} Portion${r.portions == 1 ? '' : 'en'}</span>
+        <span>🧺 ${r.ingredients.length} Zutaten</span>
+      </div>
+      <div class="meta-line" style="color:var(--muted); font-style:italic;">${escapeHtml(ingPreview)}</div>
+      <div class="card-actions">
+        <button class="btn outline small" data-detail="${r.id}">Details</button>
+        <button class="btn outline small" data-edit="${r.id}">✏️ Bearbeiten</button>
+        <button class="btn danger small" data-delete="${r.id}">🗑️ Löschen</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('[data-select]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const id = cb.dataset.select;
+      if (cb.checked) state.selected.add(id); else state.selected.delete(id);
+      saveSet(LS_SELECTED, state.selected);
+      renderRecipeGrid();
+      updateShopBadge();
+    });
+  });
+  grid.querySelectorAll('[data-detail]').forEach(btn => {
+    btn.addEventListener('click', () => openDetail(btn.dataset.detail));
+  });
+  grid.querySelectorAll('[data-edit]').forEach(btn => {
+    btn.addEventListener('click', () => startEdit(btn.dataset.edit));
+  });
+  grid.querySelectorAll('[data-delete]').forEach(btn => {
+    btn.addEventListener('click', () => deleteRecipe(btn.dataset.delete));
+  });
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ============ Detail modal ============ */
+function openDetail(id) {
+  const r = state.recipes.find(x => x.id === id);
+  if (!r) return;
+  const content = document.getElementById('detailContent');
+  content.innerHTML = `
+    <h2>${escapeHtml(r.name)}</h2>
+    <div class="badge-row" style="margin-bottom:10px;"><span class="badge">${escapeHtml(r.category)}</span></div>
+    <div class="meta-line" style="margin-bottom:14px;">🍽️ ${r.portions} Portionen</div>
+    <h4>Zutaten</h4>
+    <ul class="ing-list">
+      ${r.ingredients.map(i => `<li>${escapeHtml(i.raw)}</li>`).join('')}
+    </ul>
+    <h4>Zubereitung</h4>
+    <pre class="prep">${escapeHtml(r.preparation)}</pre>
+    ${r.source ? `<p>🔗 Quelle: <a href="${escapeHtml(r.source)}" target="_blank" rel="noopener">${escapeHtml(r.source)}</a></p>` : ''}
+  `;
+  document.getElementById('detailModal').classList.add('open');
+}
+document.getElementById('closeDetailModal').addEventListener('click', () => {
+  document.getElementById('detailModal').classList.remove('open');
+});
+document.getElementById('detailModal').addEventListener('click', (e) => {
+  if (e.target.id === 'detailModal') document.getElementById('detailModal').classList.remove('open');
+});
+
+/* ============ Delete ============ */
+function deleteRecipe(id) {
+  const r = state.recipes.find(x => x.id === id);
+  if (!r) return;
+  if (!confirm(`„${r.name}" wirklich dauerhaft löschen?`)) return;
+  state.recipes = state.recipes.filter(x => x.id !== id);
+  state.selected.delete(id);
+  saveRecipes();
+  saveSet(LS_SELECTED, state.selected);
+  renderCategoryChips();
+  renderRecipeGrid();
+  updateShopBadge();
+  showToast('Rezept gelöscht.');
+}
+
+/* ============ Search ============ */
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  state.searchTerm = e.target.value;
+  renderRecipeGrid();
+});
+
+/* ============ Select all / clear ============ */
+document.getElementById('selectAllBtn').addEventListener('click', () => {
+  state.recipes.filter(matchesFilters).forEach(r => state.selected.add(r.id));
+  saveSet(LS_SELECTED, state.selected);
+  renderRecipeGrid();
+  updateShopBadge();
+});
+document.getElementById('clearSelectionBtn').addEventListener('click', () => {
+  state.selected.clear();
+  saveSet(LS_SELECTED, state.selected);
+  renderRecipeGrid();
+  updateShopBadge();
+});
+
+/* ============ Shopping list ============ */
+function updateShopBadge() {
+  const n = state.selected.size;
+  document.getElementById('shopCountBadge').textContent = n ? `(${n})` : '';
+}
+
+function aggregateIngredients() {
+  // group by department -> name+unit key -> {amount, unit, name, notes:Set, recipes:Set}
+  const deptMap = {};
+  DEPARTMENTS.forEach(d => deptMap[d.key] = {});
+  state.recipes.forEach(r => {
+    if (!state.selected.has(r.id)) return;
+    r.ingredients.forEach(ing => {
+      const dept = guessDepartment(ing.name);
+      const key = (ing.name || ing.raw || '').trim().toLowerCase() + '|' + (ing.unit || '').toLowerCase();
+      const bucket = deptMap[dept];
+      if (!bucket[key]) {
+        bucket[key] = { name: ing.name || ing.raw, unit: ing.unit || '', amount: 0, hasAmount: false, notes: new Set(), recipes: new Set(), rawFallback: new Set() };
+      }
+      const entry = bucket[key];
+      if (ing.amount != null) {
+        entry.amount += ing.amount;
+        entry.hasAmount = true;
+      } else {
+        entry.rawFallback.add(ing.raw);
+      }
+      if (ing.note) entry.notes.add(ing.note);
+      entry.recipes.add(r.name);
+    });
+  });
+  return deptMap;
+}
+
+function renderShoppingList() {
+  updateShopBadge();
+  const wrap = document.getElementById('shopSections');
+  wrap.innerHTML = '';
+  const n = state.selected.size;
+  document.getElementById('shopRecipeCount').textContent = `${n} Rezept${n === 1 ? '' : 'e'} ausgewählt`;
+  document.getElementById('shopEmptyState').style.display = n ? 'none' : 'block';
+  if (!n) return;
+
+  const deptMap = aggregateIngredients();
+  let anyItems = false;
+
+  DEPARTMENTS.forEach(dept => {
+    const items = Object.entries(deptMap[dept.key]);
+    if (!items.length) return;
+    anyItems = true;
+    items.sort((a, b) => a[1].name.localeCompare(b[1].name, 'de'));
+    const section = document.createElement('div');
+    section.className = 'shop-section';
+    const itemsHtml = items.map(([key, entry]) => {
+      const checked = state.checked.has(dept.key + '::' + key);
+      let qtyLabel = '';
+      if (entry.hasAmount) {
+        qtyLabel = formatQty(entry.amount, entry.unit);
+      }
+      if (entry.rawFallback.size) {
+        const extra = [...entry.rawFallback].join(' + ');
+        qtyLabel = qtyLabel ? qtyLabel + ' + ' + extra : extra;
+      }
+      const noteStr = entry.notes.size ? ` <em>(${[...entry.notes].map(escapeHtml).join(', ')})</em>` : '';
+      const recipesStr = [...entry.recipes].map(escapeHtml).join(', ');
+      const itemId = dept.key + '::' + key;
+      return `
+        <div class="shop-item ${checked ? 'checked' : ''}" data-item="${escapeHtml(itemId)}">
+          <input type="checkbox" ${checked ? 'checked' : ''} data-check="${escapeHtml(itemId)}">
+          <label>
+            <span class="qty">${escapeHtml(qtyLabel)}</span> ${escapeHtml(entry.name)}${noteStr}
+            <span class="from-recipes">für: ${recipesStr}</span>
+          </label>
+        </div>
+      `;
+    }).join('');
+    section.innerHTML = `<h3>${dept.label} <span style="font-weight:400; color:var(--muted); font-size:.8rem;">(${items.length})</span></h3>${itemsHtml}`;
+    wrap.appendChild(section);
+  });
+
+  if (!anyItems) {
+    wrap.innerHTML = '<div class="empty-state">Für die ausgewählten Rezepte wurden keine Zutaten gefunden.</div>';
+  }
+
+  wrap.querySelectorAll('[data-check]').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const id = cb.dataset.check;
+      if (cb.checked) state.checked.add(id); else state.checked.delete(id);
+      saveSet(LS_CHECKED, state.checked);
+      cb.closest('.shop-item').classList.toggle('checked', cb.checked);
+    });
+  });
+}
+
+document.getElementById('resetChecksBtn').addEventListener('click', () => {
+  state.checked.clear();
+  saveSet(LS_CHECKED, state.checked);
+  renderShoppingList();
+});
+document.getElementById('clearShopBtn').addEventListener('click', () => {
+  if (!confirm('Auswahl und abgehakte Einträge wirklich leeren?')) return;
+  state.selected.clear();
+  state.checked.clear();
+  saveSet(LS_SELECTED, state.selected);
+  saveSet(LS_CHECKED, state.checked);
+  renderRecipeGrid();
+  renderShoppingList();
+});
+document.getElementById('printListBtn').addEventListener('click', () => window.print());
+
+/* ============ Add / edit recipe form ============ */
+const categorySelect = document.getElementById('f-category');
+function renderCategoryOptions() {
+  categorySelect.innerHTML = allCategories().map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+}
+
+function addIngredientRow(data) {
+  data = data || {};
+  const rowsWrap = document.getElementById('ingredientRows');
+  const row = document.createElement('div');
+  row.className = 'ingredient-row';
+  row.innerHTML = `
+    <input type="text" class="ing-amount" placeholder="z. B. 200" value="${escapeHtml(data.amount ?? '')}">
+    <input type="text" class="ing-unit" placeholder="g, ml, EL…" value="${escapeHtml(data.unit ?? '')}">
+    <input type="text" class="ing-name" placeholder="Zutat *" value="${escapeHtml(data.name ?? '')}">
+    <input type="text" class="ing-note" placeholder="Hinweis (optional)" value="${escapeHtml(data.note ?? '')}">
+    <button type="button" class="remove-ing" title="Zutat entfernen">×</button>
+  `;
+  row.querySelector('.remove-ing').addEventListener('click', () => {
+    row.remove();
+  });
+  rowsWrap.appendChild(row);
+}
+
+document.getElementById('addIngredientBtn').addEventListener('click', () => addIngredientRow());
+
+function resetForm() {
+  document.getElementById('recipeForm').reset();
+  document.getElementById('ingredientRows').innerHTML = '';
+  for (let i = 0; i < 3; i++) addIngredientRow();
+  document.getElementById('editId').value = '';
+  document.getElementById('formTitle').textContent = 'Neues Rezept hinzufügen';
+  document.getElementById('cancelEditBtn').style.display = 'none';
+  renderCategoryOptions();
+  state.editingId = null;
+}
+
+function startEdit(id) {
+  const r = state.recipes.find(x => x.id === id);
+  if (!r) return;
+  state.editingId = id;
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="add"]').classList.add('active');
+  document.getElementById('tab-add').classList.add('active');
+
+  renderCategoryOptions();
+  document.getElementById('editId').value = id;
+  document.getElementById('formTitle').textContent = 'Rezept bearbeiten';
+  document.getElementById('cancelEditBtn').style.display = 'inline-block';
+  document.getElementById('f-name').value = r.name;
+  categorySelect.value = r.category;
+  document.getElementById('f-portions').value = r.portions;
+  document.getElementById('f-prep').value = r.preparation;
+  document.getElementById('f-source').value = r.source || '';
+
+  document.getElementById('ingredientRows').innerHTML = '';
+  r.ingredients.forEach(ing => addIngredientRow({
+    amount: ing.amount != null ? String(ing.amount).replace('.', ',') : '',
+    unit: ing.unit || '',
+    name: ing.name || '',
+    note: ing.note || ''
+  }));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', resetForm);
+
+document.getElementById('recipeForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = document.getElementById('f-name').value.trim();
+  const category = categorySelect.value;
+  const portions = parseInt(document.getElementById('f-portions').value, 10);
+  const preparation = document.getElementById('f-prep').value.trim();
+  const source = document.getElementById('f-source').value.trim();
+
+  const ingRows = [...document.querySelectorAll('#ingredientRows .ingredient-row')];
+  const ingredients = [];
+  for (const row of ingRows) {
+    const name_ = row.querySelector('.ing-name').value.trim();
+    if (!name_) continue;
+    const amountRaw = row.querySelector('.ing-amount').value.trim().replace(',', '.');
+    const unit = row.querySelector('.ing-unit').value.trim();
+    const note = row.querySelector('.ing-note').value.trim();
+    const amount = amountRaw ? parseFloat(amountRaw) : null;
+    const raw = [amountRaw, unit, name_].filter(Boolean).join(' ') + (note ? ` (${note})` : '');
+    ingredients.push({
+      raw, amount: isNaN(amount) ? null : amount, unit, name: name_, note: note || null
+    });
+  }
+
+  if (!name || !category || !portions || !preparation || !ingredients.length) {
+    showToast('Bitte alle Pflichtfelder ausfüllen (mind. 1 Zutat).');
+    return;
+  }
+
+  if (state.editingId) {
+    const r = state.recipes.find(x => x.id === state.editingId);
+    Object.assign(r, { name, category, portions, preparation, source, ingredients });
+    showToast('Rezept aktualisiert.');
+  } else {
+    state.recipes.push({ id: uid(), name, category, portions, preparation, source, ingredients });
+    showToast('Rezept hinzugefügt.');
+  }
+  saveRecipes();
+  resetForm();
+  renderCategoryChips();
+  renderRecipeGrid();
+
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelector('[data-tab="browse"]').classList.add('active');
+  document.getElementById('tab-browse').classList.add('active');
+});
+
+/* ============ Export / Import backup ============ */
+document.getElementById('exportBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({ recipes: state.recipes }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const date = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `rezeptsammlung_backup_${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Backup wird heruntergeladen…');
+});
+
+document.getElementById('importInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const parsed = JSON.parse(reader.result);
+      const incoming = Array.isArray(parsed) ? parsed : parsed.recipes;
+      if (!Array.isArray(incoming)) throw new Error('Ungültiges Format');
+      if (!confirm(`${incoming.length} Rezepte importieren und zur aktuellen Sammlung hinzufügen?`)) return;
+      incoming.forEach(r => {
+        if (!r.id || state.recipes.some(x => x.id === r.id)) r.id = uid();
+        state.recipes.push(r);
+      });
+      saveRecipes();
+      renderCategoryChips();
+      renderRecipeGrid();
+      showToast('Import erfolgreich.');
+    } catch (err) {
+      alert('Die Datei konnte nicht gelesen werden: ' + err.message);
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+});
+
+/* ============ Init ============ */
+resetForm();
+renderCategoryChips();
+renderRecipeGrid();
+updateShopBadge();
+</script>
+</body>
+</html>
