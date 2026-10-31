@@ -330,6 +330,9 @@
   }
   .form-row textarea { min-height: 110px; resize: vertical; }
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .stepper { display: flex; align-items: center; gap: 6px; flex: none; }
+  .stepper button { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid var(--accent); background: var(--bg-alt); color: var(--accent); font-size: 1.2rem; line-height: 1; cursor: pointer; padding: 0; }
+  .stepper span { min-width: 22px; text-align: center; font-weight: 700; }
   .ingredient-row {
     display: grid;
     grid-template-columns: 90px 70px 1fr 170px 1fr auto;
@@ -526,7 +529,7 @@
       </div>
     </div>
     <div class="shop-sections" id="shopSections"></div>
-    <div class="empty-state" id="shopEmptyState" style="display:none;">Noch keine Rezepte ausgewählt. Gehe zu „Rezepte“ und hake welche an. ✔️</div>
+    <div class="empty-state" id="shopEmptyState" style="display:none;">Noch keine Rezepte ausgewählt. Gehe zu „Rezepte“ und wähle mit + die Portionen. ✔️</div>
   </div>
 
   <!-- ADD TAB -->
@@ -666,9 +669,25 @@ function loadSet(key) {
 }
 function saveSet(key, set) { localStorage.setItem(key, JSON.stringify([...set])); }
 
+// Auswahl: Map  Rezept-ID -> gewünschte Portionen (0 = nicht ausgewählt)
+function loadSelected() {
+  const m = new Map();
+  try {
+    const raw = JSON.parse(localStorage.getItem(LS_SELECTED) || 'null');
+    if (Array.isArray(raw)) {            // altes Format: nur IDs -> Standard-Portionen des Rezepts
+      const recs = loadRecipes();
+      raw.forEach(id => { const r = recs.find(x => x.id === id); if (r) m.set(id, r.portions || 1); });
+    } else if (raw && typeof raw === 'object') {
+      Object.entries(raw).forEach(([id, n]) => { n = parseInt(n, 10); if (n > 0) m.set(id, n); });
+    }
+  } catch (e) {}
+  return m;
+}
+function saveSelected() { localStorage.setItem(LS_SELECTED, JSON.stringify(Object.fromEntries(state.selected))); }
+
 const state = {
   recipes: loadRecipes(),
-  selected: loadSet(LS_SELECTED),
+  selected: loadSelected(),
   checked: loadSet(LS_CHECKED),
   activeCategories: new Set(),
   searchTerm: '',
@@ -788,13 +807,15 @@ function renderRecipeGrid() {
     card.innerHTML = `
       <div class="recipe-card-top">
         <h3>${escapeHtml(r.name)}</h3>
-        <label class="checkbox-wrap" title="Für Einkaufsliste auswählen">
-          <input type="checkbox" data-select="${r.id}" ${state.selected.has(r.id) ? 'checked' : ''}>
-        </label>
+        <div class="stepper" title="Portionen für die Einkaufsliste">
+          <button type="button" data-dec="${r.id}" aria-label="Weniger Portionen">−</button>
+          <span>${state.selected.get(r.id) || 0}</span>
+          <button type="button" data-inc="${r.id}" aria-label="Mehr Portionen">+</button>
+        </div>
       </div>
       <div class="badge-row"><span class="badge">${escapeHtml(r.category)}</span></div>
       <div class="meta-line">
-        <span>🍽️ ${r.portions} Portion${r.portions == 1 ? '' : 'en'}</span>
+        <span>🍽️ Rezept für ${r.portions} Portion${r.portions == 1 ? '' : 'en'}</span>
         <span>🧺 ${r.ingredients.length} Zutaten</span>
       </div>
       <div class="meta-line" style="color:var(--muted); font-style:italic;">${escapeHtml(ingPreview)}</div>
@@ -807,11 +828,17 @@ function renderRecipeGrid() {
     grid.appendChild(card);
   });
 
-  grid.querySelectorAll('[data-select]').forEach(cb => {
-    cb.addEventListener('change', () => {
-      const id = cb.dataset.select;
-      if (cb.checked) state.selected.add(id); else state.selected.delete(id);
-      saveSet(LS_SELECTED, state.selected);
+  grid.querySelectorAll('[data-inc], [data-dec]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const inc = btn.dataset.inc !== undefined;
+      const id = inc ? btn.dataset.inc : btn.dataset.dec;
+      const r = state.recipes.find(x => x.id === id);
+      if (!r) return;
+      const cur = state.selected.get(id) || 0;
+      if (inc) state.selected.set(id, cur === 0 ? (r.portions || 1) : Math.min(cur + 1, 99));
+      else if (cur <= 1) state.selected.delete(id);
+      else state.selected.set(id, cur - 1);
+      saveSelected();
       renderRecipeGrid();
       updateShopBadge();
     });
@@ -865,7 +892,7 @@ function deleteRecipe(id) {
   state.recipes = state.recipes.filter(x => x.id !== id);
   state.selected.delete(id);
   saveRecipes();
-  saveSet(LS_SELECTED, state.selected);
+  saveSelected();
   renderCategoryChips();
   renderRecipeGrid();
   updateShopBadge();
@@ -880,14 +907,14 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
 
 /* ============ Select all / clear ============ */
 document.getElementById('selectAllBtn').addEventListener('click', () => {
-  state.recipes.filter(matchesFilters).forEach(r => state.selected.add(r.id));
-  saveSet(LS_SELECTED, state.selected);
+  state.recipes.filter(matchesFilters).forEach(r => { if (!state.selected.has(r.id)) state.selected.set(r.id, r.portions || 1); });
+  saveSelected();
   renderRecipeGrid();
   updateShopBadge();
 });
 document.getElementById('clearSelectionBtn').addEventListener('click', () => {
   state.selected.clear();
-  saveSet(LS_SELECTED, state.selected);
+  saveSelected();
   renderRecipeGrid();
   updateShopBadge();
 });
@@ -904,6 +931,8 @@ function aggregateIngredients() {
   DEPARTMENTS.forEach(d => deptMap[d.key] = {});
   state.recipes.forEach(r => {
     if (!state.selected.has(r.id)) return;
+    const wanted = state.selected.get(r.id);
+    const factor = wanted / (r.portions || 1);
     r.ingredients.forEach(ing => {
       const dept = DEPT_KEYS.has(ing.dept) ? ing.dept : guessDepartment(ing.name);
       const key = (ing.name || ing.raw || '').trim().toLowerCase() + '|' + (ing.unit || '').toLowerCase();
@@ -913,13 +942,13 @@ function aggregateIngredients() {
       }
       const entry = bucket[key];
       if (ing.amount != null) {
-        entry.amount += ing.amount;
+        entry.amount += ing.amount * factor;
         entry.hasAmount = true;
       } else {
         entry.rawFallback.add(ing.raw);
       }
       if (ing.note) entry.notes.add(ing.note);
-      entry.recipes.add(r.name);
+      entry.recipes.add(`${r.name} (${wanted} P.)`);
     });
   });
   return deptMap;
@@ -930,7 +959,8 @@ function renderShoppingList() {
   const wrap = document.getElementById('shopSections');
   wrap.innerHTML = '';
   const n = state.selected.size;
-  document.getElementById('shopRecipeCount').textContent = `${n} Rezept${n === 1 ? '' : 'e'} ausgewählt`;
+  const totalPortions = [...state.selected.values()].reduce((a, b) => a + b, 0);
+  document.getElementById('shopRecipeCount').textContent = `${n} Rezept${n === 1 ? '' : 'e'} ausgewählt · ${totalPortions} Portionen`;
   document.getElementById('shopEmptyState').style.display = n ? 'none' : 'block';
   if (!n) return;
 
@@ -994,7 +1024,7 @@ document.getElementById('clearShopBtn').addEventListener('click', () => {
   if (!confirm('Auswahl und abgehakte Einträge wirklich leeren?')) return;
   state.selected.clear();
   state.checked.clear();
-  saveSet(LS_SELECTED, state.selected);
+  saveSelected();
   saveSet(LS_CHECKED, state.checked);
   renderRecipeGrid();
   renderShoppingList();
